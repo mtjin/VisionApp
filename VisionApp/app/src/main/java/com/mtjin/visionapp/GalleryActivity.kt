@@ -4,10 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.yalantis.ucrop.UCrop
 import java.io.File
 
@@ -56,23 +58,24 @@ class GalleryActivity : AppCompatActivity() {
                     val destinationUri = Uri.fromFile(File(cacheDir, "cropped"))
                     openCropActivity(sourceUri, destinationUri)
                 } else {
-                    Toast.makeText(this, "이미지를 받지 못했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT).show()
                 }
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 val resultUri = UCrop.getOutput(data!!)
                 if (resultUri != null) {
+                    Log.d("AAA","AAa")
                     //초기화
                     imageView.setImageDrawable(null)
                     //이미지뷰에 세팅
                     imageUri = resultUri
-
-                    imageView.setImageURI(resultUri)
+                    imageView.setImageURI(imageUri)
+                    //Glide.with(this).load(imageUri).fitCenter().into(imageView)
                 } else {
-                    Toast.makeText(this, "이미지를 받지 못했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT).show()
                 }
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
-            Toast.makeText(this, "이미지를 받지 못했습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT).show()
         }
     }
 
