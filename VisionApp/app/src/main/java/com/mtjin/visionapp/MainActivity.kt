@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPermissionGranted() {
                 FancyToast.makeText(
                     this@MainActivity,
-                    "권한허용 되었습니다. 감사합니다",
+                    getString(R.string.success_camera_auth_msg),
                     FancyToast.LENGTH_LONG,
                     FancyToast.SUCCESS,
                     true
@@ -37,8 +37,8 @@ class MainActivity : AppCompatActivity() {
             override fun onPermissionDenied(deniedPermissions: ArrayList<String>?) {
                 TedPermission.with(this@MainActivity)
                     .setPermissionListener(permissionListener)
-                    .setRationaleMessage("카메라앱 사용 권한이 필요합니다.")
-                    .setDeniedMessage("거부하시면 사용에 지장이 있습니다.ㅠㅠ")
+                    .setRationaleMessage(getString(R.string.request_camera_auth_msg))
+                    .setDeniedMessage(getString(R.string.deny_camera_auth_msg))
                     .setPermissions(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.INTERNET,
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
         TedPermission.with(this)
             .setPermissionListener(permissionListener)
-            .setRationaleMessage("카메라, 갤러리, 인터넷 권한이 필요해요")
+            .setRationaleMessage(getString(R.string.request_permisson_auth_msg))
             .setDeniedMessage("거부하시면 사용에 지장이 있습니다.ㅠㅠ.\n[설정] > [권한] 에서 권한을 허용할 수 있어요.")
             .setPermissions( Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.INTERNET,
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                     overridePendingTransition(R.anim.fade_in_splash, R.anim.fade_out_splash)
                     FancyToast.makeText(
                         this@MainActivity,
-                        "촬영",
+                        getString(R.string.photo),
                         FancyToast.LENGTH_LONG,
                         FancyToast.SUCCESS,
                         true
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                     overridePendingTransition(R.anim.fade_in_splash, R.anim.fade_out_splash)
                     FancyToast.makeText(
                         this@MainActivity,
-                        "앨범",
+                        getString(R.string.album),
                         FancyToast.LENGTH_LONG,
                         FancyToast.SUCCESS,
                         true
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                     overridePendingTransition(R.anim.fade_in_splash, R.anim.fade_out_splash)
                     FancyToast.makeText(
                         this@MainActivity,
-                        "촬영",
+                        getString(R.string.photo),
                         FancyToast.LENGTH_LONG,
                         FancyToast.SUCCESS,
                         true
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                     overridePendingTransition(R.anim.fade_in_splash, R.anim.fade_out_splash)
                     FancyToast.makeText(
                         this@MainActivity,
-                        "앨범",
+                        getString(R.string.album),
                         FancyToast.LENGTH_LONG,
                         FancyToast.SUCCESS,
                         true

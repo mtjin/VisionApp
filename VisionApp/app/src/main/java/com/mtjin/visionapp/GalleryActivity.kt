@@ -4,25 +4,39 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.raodevs.touchdraw.TouchDrawView
+import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
 import java.io.File
 
 
 class GalleryActivity : AppCompatActivity() {
     private lateinit var imageView: ImageView
+    private lateinit var drawImageView: TouchDrawView
     private lateinit var loadImageButton: Button
     private lateinit var indicateButton: Button
     private lateinit var sendButton: Button
-    private lateinit var imageUri: Uri
+    private lateinit var fab: FloatingActionButton
+    private lateinit var drawFab: FloatingActionButton
+    private lateinit var undoFab: FloatingActionButton
+    private lateinit var clearFab: FloatingActionButton
+    private var imageUri: Uri? = null
+
+    private var fabOpenAnim: Animation? = null
+    private var fabCloseAnim: Animation? = null
+    private var isFabOpen = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
         initView()
@@ -39,13 +53,82 @@ class GalleryActivity : AppCompatActivity() {
                 PICK_IMAGE
             )
         }
+
+        indicateButton.setOnClickListener {
+            if (imageUri == null) {
+                FancyToast.makeText(
+                    this,
+                    "사진 먼저 세팅해주세요",
+                    FancyToast.LENGTH_LONG,
+                    FancyToast.WARNING,
+                    true
+                ).show()
+            } else {
+                fab.visibility = View.VISIBLE
+            }
+        }
+
+        fab.setOnClickListener {
+            anim()
+        }
+        drawFab.setOnClickListener {
+            FancyToast.makeText(
+                this,
+                "강조할 부분에 점을 찍어주세요",
+                FancyToast.LENGTH_LONG,
+                FancyToast.INFO,
+                true
+            ).show()
+            imageView.alpha = 0.25f
+            drawImageView.visibility = View.VISIBLE
+            anim()
+        }
+
+        undoFab.setOnClickListener {
+            FancyToast.makeText(
+                this,
+                "그리기 이전으로 지우기",
+                FancyToast.LENGTH_LONG,
+                FancyToast.INFO,
+                true
+            ).show()
+            drawImageView.undo()
+        }
+
+        clearFab.setOnClickListener {
+            FancyToast.makeText(
+                this,
+                "그리기 초기화",
+                FancyToast.LENGTH_LONG,
+                FancyToast.INFO,
+                true
+            ).show()
+            drawImageView.clear()
+            anim()
+        }
+
     }
 
     private fun initView() {
         imageView = findViewById(R.id.gallery_iv_image)
+        drawImageView = findViewById(R.id.gallery_iv_draw)
+        drawImageView.strokeWidth = 30f
         loadImageButton = findViewById(R.id.gallery_btn_load)
         indicateButton = findViewById(R.id.gallery_btn_indicate)
         sendButton = findViewById(R.id.gallery_btn_send)
+        fab = findViewById(R.id.fab)
+        drawFab = findViewById(R.id.fab2_draw)
+        undoFab = findViewById(R.id.fab3_redo)
+        clearFab = findViewById(R.id.fab4_clear)
+
+        fabOpenAnim = AnimationUtils.loadAnimation(
+            applicationContext,
+            R.anim.fab_open
+        )
+        fabCloseAnim = AnimationUtils.loadAnimation(
+            applicationContext,
+            R.anim.fab_close
+        )
     }
 
 
@@ -58,20 +141,27 @@ class GalleryActivity : AppCompatActivity() {
                     val destinationUri = Uri.fromFile(File(cacheDir, "cropped"))
                     openCropActivity(sourceUri, destinationUri)
                 } else {
-                    Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 val resultUri = UCrop.getOutput(data!!)
                 if (resultUri != null) {
-                    Log.d("AAA","AAa")
                     //초기화
+                    imageView.alpha = 1f
+                    imageView.visibility = View.VISIBLE
+                    drawImageView.visibility = View.GONE
                     imageView.setImageDrawable(null)
+                    drawImageView.clear()
                     //이미지뷰에 세팅
                     imageUri = resultUri
                     imageView.setImageURI(imageUri)
-                    //Glide.with(this).load(imageUri).fitCenter().into(imageView)
+                    // 캔버스와 크기 맞춰줌 및 초기화
+                    drawImageView.layoutParams.width = imageView.width
+                    drawImageView.layoutParams.height = imageView.height
                 } else {
-                    Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
@@ -85,6 +175,26 @@ class GalleryActivity : AppCompatActivity() {
     ) {
         UCrop.of(sourceUri, destinationUri)
             .start(this)
+    }
+
+    fun anim() {
+        if (isFabOpen) {
+            drawFab.startAnimation(fabCloseAnim)
+            undoFab.startAnimation(fabCloseAnim)
+            clearFab.startAnimation(fabCloseAnim)
+            drawFab.isClickable = false
+            undoFab.isClickable = false
+            clearFab.isClickable = false
+            isFabOpen = false
+        } else {
+            drawFab.startAnimation(fabOpenAnim)
+            undoFab.startAnimation(fabOpenAnim)
+            clearFab.startAnimation(fabOpenAnim)
+            drawFab.isClickable = true
+            undoFab.isClickable = true
+            clearFab.isClickable = true
+            isFabOpen = true
+        }
     }
 
     companion object {
