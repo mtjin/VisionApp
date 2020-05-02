@@ -47,4 +47,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //drawview
     implementation 'com.github.mtjin:DrawView:v1.0'
+    implementation 'com.github.gauravyadav673:HandDraw:v1.02'
 }

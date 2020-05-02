@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -14,6 +15,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.drawToBitmap
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mtjin.library.DrawView
 import com.shashank.sony.fancytoastlib.FancyToast
@@ -106,6 +108,7 @@ class GalleryActivity : AppCompatActivity() {
                     // 캔버스와 크기 맞춰줌 및 초기화
                     drawImageView.layoutParams.width = imageView.width
                     drawImageView.layoutParams.height = imageView.height
+                    Log.d("AAAA " , "" +  imageView.width + "   " + imageView.height)
                 } else {
                     Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT)
                         .show()
@@ -180,6 +183,9 @@ class GalleryActivity : AppCompatActivity() {
         ).show()
         imageView.alpha = 0.25f
         drawImageView.visibility = View.VISIBLE
+        // 캔버스와 크기 맞춰줌 및 초기화
+        drawImageView.layoutParams.width = imageView.width
+        drawImageView.layoutParams.height = imageView.height
         anim()
     }
 
@@ -198,11 +204,10 @@ class GalleryActivity : AppCompatActivity() {
 
     // 세팅된 이미지 갤러리에 저장
     fun saveDrawFile(view: View) {
-        val bitmap = imageView.drawable.toBitmap()
-
+        val bitmap = imageView.drawToBitmap()
         var outStream: FileOutputStream? = null
         val sdCard: File = Environment.getExternalStorageDirectory()
-        val dir = File(sdCard.absolutePath + "/VisinApp")
+        val dir = File(sdCard.absolutePath + "/DrawViewApp")
         dir.mkdirs()
         val fileName =
             String.format("%d.jpg", System.currentTimeMillis())
@@ -211,15 +216,6 @@ class GalleryActivity : AppCompatActivity() {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
         outStream.flush()
         outStream.close()
-//        drawImageView.saveFileDrawViewGetUri().let {
-//            FancyToast.makeText(
-//                this,
-//                "사진 저장",
-//                FancyToast.LENGTH_LONG,
-//                FancyToast.INFO,
-//                true
-//            ).show()
-//        }
     }
 
     // 사진 서버에 전송
