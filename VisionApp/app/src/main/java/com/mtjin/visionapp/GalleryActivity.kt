@@ -15,7 +15,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.drawToBitmap
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mtjin.library.DrawView
 import com.shashank.sony.fancytoastlib.FancyToast
@@ -204,10 +203,10 @@ class GalleryActivity : AppCompatActivity() {
 
     // 세팅된 이미지 갤러리에 저장
     fun saveDrawFile(view: View) {
-        val bitmap = imageView.drawToBitmap()
+        val bitmap = imageView.drawable.toBitmap()
         var outStream: FileOutputStream? = null
         val sdCard: File = Environment.getExternalStorageDirectory()
-        val dir = File(sdCard.absolutePath + "/DrawViewApp")
+        val dir = File(sdCard.absolutePath + "/VisinApp")
         dir.mkdirs()
         val fileName =
             String.format("%d.jpg", System.currentTimeMillis())

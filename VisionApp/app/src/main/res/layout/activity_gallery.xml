@@ -9,7 +9,6 @@
     tools:context=".GalleryActivity">
 
     <ImageView
-        android:background="#CF1D1D"
         android:adjustViewBounds="true"
         android:id="@+id/gallery_iv_image"
         android:layout_width="wrap_content"
@@ -21,7 +20,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.mtjin.library.DrawView
-        android:background="#FF9800"
         android:id="@+id/gallery_iv_draw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
