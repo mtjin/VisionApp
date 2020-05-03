@@ -16,14 +16,14 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".CameraActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="fullSensor"></activity>
         <activity
             android:name=".GalleryActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

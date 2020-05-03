@@ -34,6 +34,7 @@ class GalleryActivity : AppCompatActivity() {
     private lateinit var undoFab: FloatingActionButton
     private lateinit var clearFab: FloatingActionButton
     private lateinit var saveFab: FloatingActionButton
+    private lateinit var cameraFab : FloatingActionButton
     private var imageUri: Uri? = null
 
     private var fabOpenAnim: Animation? = null
@@ -68,6 +69,7 @@ class GalleryActivity : AppCompatActivity() {
         undoFab = findViewById(R.id.fab3_undo)
         clearFab = findViewById(R.id.fab4_clear)
         saveFab = findViewById(R.id.fab5_save)
+        cameraFab = findViewById(R.id.fab6_camera)
 
         fabOpenAnim = AnimationUtils.loadAnimation(
             applicationContext,
@@ -132,20 +134,24 @@ class GalleryActivity : AppCompatActivity() {
             undoFab.startAnimation(fabCloseAnim)
             clearFab.startAnimation(fabCloseAnim)
             saveFab.startAnimation(fabCloseAnim)
+            cameraFab.startAnimation(fabCloseAnim)
             drawFab.isClickable = false
             undoFab.isClickable = false
             clearFab.isClickable = false
             saveFab.isClickable = false
+            cameraFab.isClickable = false
             isFabOpen = false
         } else {
             drawFab.startAnimation(fabOpenAnim)
             undoFab.startAnimation(fabOpenAnim)
             clearFab.startAnimation(fabOpenAnim)
             saveFab.startAnimation(fabOpenAnim)
+            cameraFab.startAnimation(fabOpenAnim)
             drawFab.isClickable = true
             undoFab.isClickable = true
             clearFab.isClickable = true
             saveFab.isClickable = true
+            cameraFab.isClickable = true
             isFabOpen = true
         }
     }
