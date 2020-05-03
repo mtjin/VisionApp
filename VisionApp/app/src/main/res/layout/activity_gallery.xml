@@ -80,6 +80,18 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:visibility="invisible"
+        android:id="@+id/fab6_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_camera_alt_black_24dp"
+        app:layout_constraintBottom_toTopOf="@id/fab5_save"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:visibility="invisible"
         android:id="@+id/fab5_save"
         android:onClick="saveDrawFile"
         android:layout_width="wrap_content"
