@@ -17,8 +17,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mtjin.library.DrawView
+import com.mtjin.visionapp.api.ApiClient
+import com.mtjin.visionapp.api.ApiInterface
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
 
@@ -224,7 +229,21 @@ class GalleryActivity : AppCompatActivity() {
     }
 
     // 사진 서버에 전송
-    fun requestDrawImage(view: View) {}
+    fun requestDrawImage(view: View) {
+        Log.d("AAA", " AAAAA")
+        val apiInteface = ApiClient.getApiClient().create(ApiInterface::class.java)
+        val call = apiInteface.getTest()
+        call.enqueue(object  : Callback<String>{
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("AAA", " onFailure")
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d("AAA", " onResponse")
+            }
+
+        })
+    }
 
     // +Fab 메뉴 버튼(그리기관련) 나오게 하기
     fun showIndicateMenu(view: View) {
