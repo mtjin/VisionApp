@@ -57,6 +57,6 @@ dependencies {
     implementation 'com.github.mtjin:DrawView:v1.0'
     implementation 'com.github.gauravyadav673:HandDraw:v1.02'
     //retrofit2
-    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
 }

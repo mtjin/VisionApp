@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
@@ -21,9 +22,11 @@ import com.mtjin.visionapp.api.ApiClient
 import com.mtjin.visionapp.api.ApiInterface
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
@@ -39,7 +42,7 @@ class GalleryActivity : AppCompatActivity() {
     private lateinit var undoFab: FloatingActionButton
     private lateinit var clearFab: FloatingActionButton
     private lateinit var saveFab: FloatingActionButton
-    private lateinit var cameraFab : FloatingActionButton
+    private lateinit var cameraFab: FloatingActionButton
     private var imageUri: Uri? = null
 
     private var fabOpenAnim: Animation? = null
@@ -114,7 +117,7 @@ class GalleryActivity : AppCompatActivity() {
                     // 캔버스와 크기 맞춰줌 및 초기화
                     drawImageView.layoutParams.width = imageView.width
                     drawImageView.layoutParams.height = imageView.height
-                    Log.d("AAAA " , "" +  imageView.width + "   " + imageView.height)
+                    Log.d("AAAA ", "" + imageView.width + "   " + imageView.height)
                 } else {
                     Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT)
                         .show()
@@ -123,6 +126,15 @@ class GalleryActivity : AppCompatActivity() {
         } else if (resultCode == UCrop.RESULT_ERROR) {
             Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun getStringFromBitmap(bitmapPicture: Bitmap): String? {
+        val encodedImage: String
+        val byteArrayBitmapStream = ByteArrayOutputStream()
+        bitmapPicture.compress(Bitmap.CompressFormat.PNG, 100, byteArrayBitmapStream)
+        val b: ByteArray = byteArrayBitmapStream.toByteArray()
+        encodedImage = Base64.encodeToString(b, Base64.DEFAULT)
+        return encodedImage
     }
 
     private fun openCropActivity(
@@ -223,7 +235,7 @@ class GalleryActivity : AppCompatActivity() {
             String.format("%d.jpg", System.currentTimeMillis())
         val outFile = File(dir, fileName)
         outStream = FileOutputStream(outFile)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, outStream)
         outStream.flush()
         outStream.close()
     }
@@ -232,17 +244,27 @@ class GalleryActivity : AppCompatActivity() {
     fun requestDrawImage(view: View) {
         Log.d("AAA", " AAAAA")
         val apiInteface = ApiClient.getApiClient().create(ApiInterface::class.java)
-        val call = apiInteface.getTest()
-        call.enqueue(object  : Callback<String>{
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("AAA", " onFailure")
-            }
+        Thread(Runnable {
+            val call = apiInteface.getTest(
+                "111",
+                "20",
+                "20"
+            )
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("AAA", " onFailure")
+                    Log.d("AAA", t.message)
+                }
 
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.d("AAA", " onResponse")
-            }
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("AAA", " onResponse")
+                }
 
-        })
+            })
+        }).start()
     }
 
     // +Fab 메뉴 버튼(그리기관련) 나오게 하기
