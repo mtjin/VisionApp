@@ -16,12 +16,16 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.net.toFile
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mtjin.library.DrawView
 import com.mtjin.visionapp.api.ApiClient
 import com.mtjin.visionapp.api.ApiInterface
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,6 +48,7 @@ class GalleryActivity : AppCompatActivity() {
     private lateinit var saveFab: FloatingActionButton
     private lateinit var cameraFab: FloatingActionButton
     private var imageUri: Uri? = null
+    private var file: File? = null
 
     private var fabOpenAnim: Animation? = null
     private var fabCloseAnim: Animation? = null
@@ -105,6 +110,8 @@ class GalleryActivity : AppCompatActivity() {
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 val resultUri = UCrop.getOutput(data!!)
                 if (resultUri != null) {
+                    //전송할 파일 등록
+                    file = resultUri.toFile()
                     //초기화
                     imageView.alpha = 1f
                     imageView.visibility = View.VISIBLE
@@ -244,27 +251,19 @@ class GalleryActivity : AppCompatActivity() {
     fun requestDrawImage(view: View) {
         Log.d("AAA", " AAAAA")
         val apiInteface = ApiClient.getApiClient().create(ApiInterface::class.java)
-        Thread(Runnable {
-            val call = apiInteface.getTest(
-                "111",
-                "20",
-                "20"
-            )
-            call.enqueue(object : Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.d("AAA", " onFailure")
-                    Log.d("AAA", t.message)
-                }
+        //파일 세팅
+        val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
+        val body: MultipartBody.Part =
+            MultipartBody.Part.createFormData("image", file?.name, requestBody)
+        apiInteface.getTest(body).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
+            }
 
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    Log.d("AAA", " onResponse")
-                }
-
-            })
-        }).start()
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.d("AAA", "SUCCESS REQUEST !!!!")
+            }
+        })
     }
 
     // +Fab 메뉴 버튼(그리기관련) 나오게 하기

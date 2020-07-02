@@ -1,17 +1,16 @@
 package com.mtjin.visionapp.api
 
+import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface ApiInterface {
-    @FormUrlEncoded
+    @Multipart
     @POST("/predict")
     fun getTest(
-        @Field("image") image: String,
-        @Field("x") x: String,
-        @Field("y") y: String
+        @Part file: MultipartBody.Part
     ): Call<ResponseBody>
 }
