@@ -1,7 +1,10 @@
 package com.mtjin.visionapp
 
+import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -13,14 +16,13 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.net.toFile
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mtjin.library.DrawView
 import com.mtjin.visionapp.api.ApiClient
 import com.mtjin.visionapp.api.ApiInterface
+import com.mtjin.visionapp.model.Point
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
 import okhttp3.MediaType
@@ -33,6 +35,7 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStream
 
 
 class GalleryActivity : AppCompatActivity() {
@@ -97,41 +100,43 @@ class GalleryActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if (requestCode == PICK_IMAGE) {
-                val sourceUri = data!!.data
-                if (sourceUri != null) {
-                    val destinationUri = Uri.fromFile(File(cacheDir, "cropped"))
-                    openCropActivity(sourceUri, destinationUri)
-                } else {
-                    Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT)
-                        .show()
-                }
-            } else if (requestCode == UCrop.REQUEST_CROP) {
-                val resultUri = UCrop.getOutput(data!!)
-                if (resultUri != null) {
-                    //전송할 파일 등록
-                    file = resultUri.toFile()
-                    //초기화
-                    imageView.alpha = 1f
-                    imageView.visibility = View.VISIBLE
-                    drawImageView.visibility = View.GONE
-                    imageView.setImageDrawable(null)
-                    drawImageView.clear()
-                    //이미지뷰에 세팅
-                    imageUri = resultUri
-                    imageView.setImageURI(imageUri)
-                    // 캔버스와 크기 맞춰줌 및 초기화
-                    drawImageView.layoutParams.width = imageView.width
-                    drawImageView.layoutParams.height = imageView.height
-                    Log.d("AAAA ", "" + imageView.width + "   " + imageView.height)
-                } else {
-                    Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT)
-                        .show()
-                }
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            var resultUri = data.data!!
+            val inputStream: InputStream? = contentResolver.openInputStream(data.data!!)
+            val img: Bitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+            //전송할 파일 등록
+            var cursor: Cursor? = null
+            try {
+                /*
+             *  Uri 스키마를
+             *  content:/// 에서 file:/// 로  변경한다.
+             */
+                val proj =
+                    arrayOf(MediaStore.Images.Media.DATA)
+                cursor = contentResolver.query(resultUri, proj, null, null, null)
+                assert(cursor != null)
+                val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                cursor.moveToFirst()
+                file = File(cursor.getString(column_index))
+            } finally {
+                cursor?.close()
             }
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            Toast.makeText(this, getString(R.string.get_img_error_msg), Toast.LENGTH_SHORT).show()
+
+
+            //초기화
+            imageView.alpha = 1f
+            imageView.visibility = View.VISIBLE
+            drawImageView.visibility = View.GONE
+            imageView.setImageDrawable(null)
+            drawImageView.clear()
+            //이미지뷰에 세팅
+            imageUri = resultUri
+            imageView.setImageURI(imageUri)
+            // 캔버스와 크기 맞춰줌 및 초기화
+            drawImageView.layoutParams.width = imageView.width
+            drawImageView.layoutParams.height = imageView.height
+            Log.d("AAAA ", "" + imageView.width + "   " + imageView.height)
         }
     }
 
@@ -250,20 +255,58 @@ class GalleryActivity : AppCompatActivity() {
     // 사진 서버에 전송
     fun requestDrawImage(view: View) {
         Log.d("AAA", " AAAAA")
+        if (drawImageView.getPointList() == null || drawImageView.getPointList()!!.isEmpty()) {
+            FancyToast.makeText(
+                this,
+                "선을 먼저 그려주세요",
+                FancyToast.LENGTH_LONG,
+                FancyToast.WARNING,
+                true
+            ).show()
+            return
+        }
+        val xList = ArrayList<Float>()
+        val yList = ArrayList<Float>()
+        while (drawImageView.getPointList()!!.isNotEmpty()) {
+            with(drawImageView.getPointList()) {
+                val pointList = this?.pop()
+                for (point in pointList!!) {
+                    xList.add(point.x)
+                    yList.add(point.y)
+                }
+            }
+        }
         val apiInteface = ApiClient.getApiClient().create(ApiInterface::class.java)
         //파일 세팅
         val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("image", file?.name, requestBody)
-        apiInteface.getTest(body).enqueue(object : Callback<ResponseBody> {
+        Log.d("AAA" , xList.toString())
+        Log.d("AAA" , yList.toString())
+        apiInteface.getTest(body,xList[0], yList[0]).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
+                drawImageView.clear()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Log.d("AAA", "SUCCESS REQUEST !!!!")
+                drawImageView.clear()
             }
         })
+//        apiInteface.getTest2(Point(xList, yList)).enqueue(object : Callback<ResponseBody> {
+//            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+//                Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
+//                drawImageView.clear()
+//            }
+//
+//            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+//                Log.d("AAA", "SUCCESS REQUEST !!!!")
+//                drawImageView.clear()
+//            }
+//        })
+//
+//        })
     }
 
     // +Fab 메뉴 버튼(그리기관련) 나오게 하기
@@ -284,11 +327,10 @@ class GalleryActivity : AppCompatActivity() {
     // 갤러리에서 사진 불러오기
     fun getImageFromGallery(view: View) {
         val intent = Intent(Intent.ACTION_PICK)
-        intent.type = MediaStore.Images.Media.CONTENT_TYPE
-        intent.type = "image/*"
-        startActivityForResult(
-            intent,
-            PICK_IMAGE
+        intent.setDataAndType(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            "image/*"
         )
+        startActivityForResult(intent, PICK_IMAGE)
     }
 }
