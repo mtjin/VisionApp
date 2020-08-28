@@ -75,7 +75,7 @@ def apply_blur_(input_img,mask):
             else:
                 blur_res[i,j,:]=res_mask[i,j,:]
         
-      ##total_alpha = (x_alpha+y_alpha+20)
+    #total_alpha = (x_alpha+y_alpha+20)
     #dx=np.uint32(np.abs(i-c_x)/(max_x*0.1))
     #dy=np.uint32(np.abs(j-c_y)/(max_y*0.1)) 
             
