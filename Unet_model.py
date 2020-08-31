@@ -68,9 +68,9 @@ def UNet_custom():
     merge9 = concatenate([conv1, up9,latent_layer_7], axis=3)
     conv9 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge9)
     merge10 = concatenate([conv9,latent_layer_6], axis=3)
-    conv10 = Conv2D(4, 1, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
+    conv10 = Conv2D(4, 1, activation='relu', padding='same', kernel_initializer='he_normal')(merge10)
     conv10 = Conv2D(1, 1, activation='sigmoid')(conv10)
     
     coarse_decoder_model = Model(inputs=inp, outputs=[conv10,latent_res])
-    test_2 = Model(inputs=inp, outputs=[merge6])
-    return coarse_decoder_model,test_2
+    #test_2 = Model(inputs=inp, outputs=[merge6])
+    return coarse_decoder_model  #test_2
