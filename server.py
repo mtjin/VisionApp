@@ -1,75 +1,52 @@
-import os
+# -*- coding: utf-8 -*- 
 
+
+import os
+import cv2
 from flask import jsonify
-from keras.applications import ResNet50
-from keras.preprocessing.image import img_to_array
-from keras.applications import imagenet_utils
-from PIL import Image
+
 import numpy as np
 import flask
 from flask import request, render_template
 import io
+import redis
 import tensorflow as tf
 import matplotlib
+
+from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
 
-matplotlib.use('TkAgg')
-from matplotlib import pyplot as plt
 
+from blur_process_funcs import *
+from utils import *
+model_path = './model/unet_nomal_ver4.h5'
 # Flask 애플리케이션과 Keras 모델을 초기화합니다.
+import redis
+redis_conn =  redis.StrictRedis(host='localhost',port=6379,db=0)
+#구현한 유틸리티 import
 app = flask.Flask(__name__)
-model = None
+CORS(app)
+
+model = load_Model(model_path); 
 
 
-def load_model():
-    # 미리 학습된 Keras 모델을 불러옵니다(여기서 우리는 ImageNet으로 학습되고
-    # Keras에서 제공하는 모델을 사용합니다. 하지만 쉽게 하기위해
-    # 당신이 설계한 신경망으로 대체할 수 있습니다.)
-    global model
-    global graph
-    model = ResNet50(weights="imagenet")
-    graph = tf.get_default_graph()
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    sel = ("Hi")
+    return sel
 
-
-def prepare_image(image, target):
-    # 만약 이미지가 RGB가 아니라면, RGB로 변환해줍니다.
-    # if image.mode != "RGB":
-    #     image = image.convert("RGB")
-    # 입력 이미지 사이즈를 재정의하고 사전 처리를 진행합니다.
-    # image = image.resize(target)
-    # image = img_to_array(image)
-    # image = np.expand_dims(image, axis=0)
-    # image = imagenet_utils.preprocess_input(image)
-    # 처리된 이미지를 반환합니다.
-    return image
-
-
-@app.route("/predict222", methods=['POST'])
-def predict():
-    target = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images/')
-    print(target)
-    if not os.path.isdir(target):
-        os.mkdir(target)
-
-    for file in request.files.getlist("file"):
-        print(file)
-        filename = file.filename
-        destination = "/".join([target, filename])
-        print(destination)
-        file.save(destination)
-    return "SUCCESS"
-
-
-@app.route('/upload', methods=['GET'])
-def load_file():
-    print("HI BRO")
-
-
-@app.route('/', methods=['GET'])
-def test():
-    print("HI GET")
-
+@app.route("/outfocus", methods=['POST'])
+def get_img_mask():
+    None
+    
+@app.route("/imgsave", methods=['POST'])
+def imgsave():
+    None
+@app.route("/imgdisgard", methods=['POST'])
+def imgdisgard():
+    None
+   
 
 # 파일 업로드
 @app.route('/predict', methods=['GET', 'POST'])
@@ -101,6 +78,6 @@ def upload_file():
 if __name__ == "__main__":
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
-    load_model()
+    #load_model()
     # 0.0.0.0 으로 해야 같은 와이파에 폰에서 접속 가능함
     app.run(host='0.0.0.0')
