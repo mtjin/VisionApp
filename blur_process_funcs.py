@@ -5,14 +5,14 @@ import matplotlib.pyplot as plt
 blur_kernal_level = [5,7,9,11,13,15,21,25]
 
 
-
+"""
 sample_img =  cv2.imread("./sample_dog.jpg")
 sample_bear= cv2.imread("sample_bear.jpg")
 sample_bear_mask = cv2.imread("sample_bear_mask.png")
 
 center_x =np.int(sample_bear.shape[0]/2)
 center_y =np.int(sample_bear.shape[1]/2)
-
+"""
 
 def get_center_pix_indexes(mask):
     max_x = 0

@@ -23,3 +23,6 @@ def getPredict_List():
     p_list =  os.listdir('./model_predicts')
     return p_list
 
+
+def remove_annoby():
+    None

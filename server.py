@@ -13,7 +13,7 @@ import redis
 import tensorflow as tf
 import matplotlib
 
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
 
@@ -26,7 +26,8 @@ import redis
 redis_conn =  redis.StrictRedis(host='localhost',port=6379,db=0)
 #구현한 유틸리티 import
 app = flask.Flask(__name__)
-CORS(app)
+#CORS(app)
+
 
 model = load_Model(model_path); 
 
@@ -38,13 +39,16 @@ def index():
 
 @app.route("/outfocus", methods=['POST'])
 def get_img_mask():
+    join_source = json.loads(request.data.decode("utf-8"))
     None
     
 @app.route("/imgsave", methods=['POST'])
 def imgsave():
+    join_source = json.loads(request.data.decode("utf-8"))
     None
 @app.route("/imgdisgard", methods=['POST'])
 def imgdisgard():
+    join_source = json.loads(request.data.decode("utf-8"))
     None
    
 
