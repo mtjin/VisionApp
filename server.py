@@ -29,7 +29,7 @@ app = flask.Flask(__name__)
 #CORS(app)
 
 
-model = load_Model(model_path); 
+#model = load_Model(model_path); 
 
 
 @app.route('/', methods=['GET', 'POST'])
