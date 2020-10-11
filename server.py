@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+ㅡ# -*- coding: utf-8 -*- 
 
 
 import os
@@ -11,7 +11,7 @@ from flask import request, render_template
 import io
 import redis
 import tensorflow as tf
-import matplotlib
+import matplotlib.pyplot as plt
 
 #from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
@@ -71,7 +71,7 @@ def upload_file():
         # 파일 받기
         f = request.files['image']
         # 그걸 그대로 적당한 파일명 줘서 저장 (뭔지랄을 해도 파일 저장된걸 볼 수가 없음 어따 저장되는겨 싯벌)
-        f.save(secure_filename(f.filename))
+        f.save('./'+secure_filename(f.filename))
         print(f.filename)
         sfname = str(secure_filename(f.filename))
         f.save(sfname)
