@@ -28,10 +28,6 @@ def getPredict_List():
 def remove_annoby():
     None
     
-p1 = cv2.imread('./pr_h1.png')[:,:,0]
-p1 = cv2.resize(p1,((480,854)))
-p2 = cv2.imread('./label_h1.png')[:,:,0]
-p1 = cv2.resize(p1,((480,854)))
 
 
 def IoU(predicted_mask,mask_lable):
