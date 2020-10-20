@@ -2,7 +2,7 @@
 
 
 import os
-import cv2
+#import cv2
 from flask import jsonify
 
 import numpy as np
@@ -16,14 +16,14 @@ import matplotlib.pyplot as plt
 #from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
-
+from werkzeug.datastructures import FileStorage
 
 from blur_process_funcs import *
 from utils import *
-model_path = './model/unet_nomal_ver4.h5'
+#model_path = './model/unet_nomal_ver4.h5'
 # Flask 애플리케이션과 Keras 모델을 초기화합니다.
-import redis
-redis_conn =  redis.StrictRedis(host='localhost',port=6379,db=0)
+#import redis
+#redis_conn =  redis.StrictRedis(host='localhost',port=6379,db=0)
 #구현한 유틸리티 import
 app = flask.Flask(__name__)
 #CORS(app)
@@ -32,24 +32,27 @@ app = flask.Flask(__name__)
 #model = load_Model(model_path); 
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    sel = ("Hi")
-    return sel
 
-@app.route("/outfocus", methods=['POST'])
-def get_img_mask():
-    join_source = json.loads(request.data.decode("utf-8"))
-    None
-    
-@app.route("/imgsave", methods=['POST'])
-def imgsave():
-    join_source = json.loads(request.data.decode("utf-8"))
-    None
-@app.route("/imgdisgard", methods=['POST'])
-def imgdisgard():
-    join_source = json.loads(request.data.decode("utf-8"))
-    None
+
+
+# @app.route('/', methods=['GET', 'POST'])
+# def index():
+#     sel = ("Hi")
+#     return sel
+#
+# @app.route("/outfocus", methods=['POST'])
+# def get_img_mask():
+#     join_source = json.loads(request.data.decode("utf-8"))
+#     None
+#
+# @app.route("/imgsave", methods=['POST'])
+# def imgsave():
+#     join_source = json.loads(request.data.decode("utf-8"))
+#     None
+# @app.route("/imgdisgard", methods=['POST'])
+# def imgdisgard():
+#     join_source = json.loads(request.data.decode("utf-8"))
+#     None
    
 
 # 파일 업로드
@@ -57,6 +60,8 @@ def imgdisgard():
 def upload_file():
     if request.method == 'POST':
         print(flask.request.files)
+        print(flask.request.files.get('image'))
+        #print(flask.request.files['20200912_174631.jpg'])
         print(flask.request.form)
         # 내가 찍은 X, Y 좌표 리스트 (Float 형)
         x_list = request.form.getlist('x')
@@ -70,8 +75,11 @@ def upload_file():
         print(y_first)
         # 파일 받기
         f = request.files['image']
-        # 그걸 그대로 적당한 파일명 줘서 저장 (뭔지랄을 해도 파일 저장된걸 볼 수가 없음 어따 저장되는겨 싯벌)
-        f.save('./'+secure_filename(f.filename))
+
+        f2 =flask.request.files.get('image')
+        f2.save('D:\Git\zzzzzzzzz\VisionApp\est.jpg')
+        filename = secure_filename(f.filename)
+        f.save(os.path.join('./'+filename))
         print(f.filename)
         sfname = str(secure_filename(f.filename))
         f.save(sfname)
