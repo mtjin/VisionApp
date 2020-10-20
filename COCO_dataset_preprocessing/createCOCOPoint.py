@@ -50,7 +50,7 @@ def pointPatch():
 
 
 def targetPixelList(image):
-    x = len(image[0])
+    x = len(image[0])ㄴ
     y = len(image)
     pointlist = []
     for i in range(y):
