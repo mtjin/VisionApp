@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+ㅡ# -*- coding: utf-8 -*- 
 
 
 import os
@@ -11,7 +11,7 @@ from flask import request, render_template
 import io
 import redis
 import tensorflow as tf
-import matplotlib
+import matplotlib.pyplot as plt
 
 #from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
@@ -29,7 +29,10 @@ app = flask.Flask(__name__)
 #CORS(app)
 
 
-#model = load_Model(model_path);
+#model = load_Model(model_path); 
+
+
+
 
 
 # @app.route('/', methods=['GET', 'POST'])
@@ -72,6 +75,7 @@ def upload_file():
         print(y_first)
         # 파일 받기
         f = request.files['image']
+
         f2 =flask.request.files.get('image')
         f2.save('D:\Git\zzzzzzzzz\VisionApp\est.jpg')
         filename = secure_filename(f.filename)

@@ -1,6 +1,7 @@
 import os
 from PIL import Image
 import numpy as np
+import cv2
 from tensorflow.keras.models import Model, load_model
 
 def discard():
@@ -26,3 +27,29 @@ def getPredict_List():
 
 def remove_annoby():
     None
+    
+
+
+def IoU(predicted_mask,mask_lable):
+
+    max_count = np.count_nonzero(mask_lable)
+    pp = np.uint8(predicted_mask)
+    p1 = np.zeros(pp.shape)
+    for i,row in enumerate(pp):
+        for j,one in enumerate(row):
+            if(one<100):
+                continue
+            else:
+                p1[i][j] = 1
+    p2= np.uint8(mask_lable/255)
+    res = p1*p2
+    res_count = np.count_nonzero(res)
+    
+    return np.float32(res_count/max_count)
+
+    
+    
+    
+    
+    
+    

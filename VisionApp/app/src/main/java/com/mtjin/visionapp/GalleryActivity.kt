@@ -281,7 +281,9 @@ class GalleryActivity : AppCompatActivity() {
         val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("image", file?.name, requestBody)
-        apiInteface.getTest(body, xList, yList).enqueue(object : Callback<ResponseBody> {
+        Log.d("AAA" , xList.toString())
+        Log.d("AAA" , yList.toString())
+        apiInteface.getTest(body,xList[0], yList[0]).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
                 drawImageView.clear()
