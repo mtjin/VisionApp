@@ -12,6 +12,7 @@ import io
 import redis
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import cv2
 
 #from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
@@ -30,31 +31,7 @@ app = flask.Flask(__name__)
 
 
 #model = load_Model(model_path); 
-
-
-
-
-
-# @app.route('/', methods=['GET', 'POST'])
-# def index():
-#     sel = ("Hi")
-#     return sel
-#
-# @app.route("/outfocus", methods=['POST'])
-# def get_img_mask():
-#     join_source = json.loads(request.data.decode("utf-8"))
-#     None
-#
-# @app.route("/imgsave", methods=['POST'])
-# def imgsave():
-#     join_source = json.loads(request.data.decode("utf-8"))
-#     None
-# @app.route("/imgdisgard", methods=['POST'])
-# def imgdisgard():
-#     join_source = json.loads(request.data.decode("utf-8"))
-#     None
    
-
 # 파일 업로드
 @app.route('/predict', methods=['GET', 'POST'])
 def upload_file():
@@ -63,21 +40,26 @@ def upload_file():
         print(flask.request.files.get('image'))
         #print(flask.request.files['20200912_174631.jpg'])
         print(flask.request.form)
+        
+        f2 =flask.request.files.get('image')
+        f2.save('D:\Git\zzzzzzzzz\VisionApp\est.jpg')
+        img = cv2.imread('D:\Git\zzzzzzzzz\VisionApp\est.jpg')
         # 내가 찍은 X, Y 좌표 리스트 (Float 형)
-        x_list = request.form.getlist('x')
-        y_list = request.form.getlist('y')
-        print(x_list)
-        print(y_list)
-        # # 처음 그린 좌표 하나만 세팅
-        x_first = x_list[0]
-        y_first = y_list[0]
-        print(x_first)
-        print(y_first)
+        x_list = np.uint(request.form.getlist('x'))
+        y_list = np.uint(srequest.form.getlist('y'))
+        #유저 백그라운드 포인트
+        
+        """서버에서 positive_anno_mask을 upload_file에 대한 리스폰스값으로 보내야댐"""
+        positive_anno_mask = get_User_Annotation_point_Mask(x_list,y_list,img)
+        
+        #nx_list = np.uint(request.form.getlist('nx'))
+        #ny_list = np.uint(request.form.getlist('ny'))
+        #negative_anno_mask = get_User_Annotation_point_Mask(x_list,y_list,img)
+        
         # 파일 받기
         f = request.files['image']
 
-        f2 =flask.request.files.get('image')
-        f2.save('D:\Git\zzzzzzzzz\VisionApp\est.jpg')
+        
         filename = secure_filename(f.filename)
         f.save(os.path.join('./'+filename))
         print(f.filename)
