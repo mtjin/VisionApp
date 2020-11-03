@@ -1,15 +1,16 @@
 package com.mtjin.visionapp
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
@@ -18,12 +19,13 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.isVisible
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mtjin.library.DrawView
 import com.mtjin.visionapp.api.ApiClient
 import com.mtjin.visionapp.api.ApiInterface
 import com.shashank.sony.fancytoastlib.FancyToast
-import com.yalantis.ucrop.UCrop
+import kotlinx.android.synthetic.main.activity_gallery.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -31,20 +33,22 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 
 
 class GalleryActivity : AppCompatActivity() {
     private lateinit var imageView: ImageView
-    private lateinit var drawImageView: DrawView
+    private lateinit var backDrawImageView: DrawView
+    private lateinit var foreDrawImageView: DrawView
     private lateinit var loadImageButton: Button
     private lateinit var indicateButton: Button
     private lateinit var sendButton: Button
     private lateinit var fab: FloatingActionButton
-    private lateinit var drawFab: FloatingActionButton
+    private lateinit var backDrawFab: FloatingActionButton
+    private lateinit var foreDrawFab: FloatingActionButton
     private lateinit var undoFab: FloatingActionButton
     private lateinit var clearFab: FloatingActionButton
     private lateinit var saveFab: FloatingActionButton
@@ -73,18 +77,22 @@ class GalleryActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        imageView = findViewById(R.id.gallery_iv_image)
-        drawImageView = findViewById(R.id.gallery_iv_draw)
-        drawImageView.setStrokeWidth(30f)
+        imageView = findViewById(R.id.iv_image)
+        backDrawImageView = findViewById(R.id.dv_draw_back)
+        backDrawImageView.setStrokeWidth(30f)
+        foreDrawImageView = findViewById(R.id.dv_draw_fore)
+        foreDrawImageView.setStrokeWidth(30f)
+        foreDrawImageView.setPenColor(Color.parseColor("#F70000"))
         loadImageButton = findViewById(R.id.gallery_btn_load)
         indicateButton = findViewById(R.id.gallery_btn_indicate)
         sendButton = findViewById(R.id.gallery_btn_send)
         fab = findViewById(R.id.fab)
-        drawFab = findViewById(R.id.fab2_draw)
+        backDrawFab = findViewById(R.id.fab2_back_draw)
         undoFab = findViewById(R.id.fab3_undo)
         clearFab = findViewById(R.id.fab4_clear)
         saveFab = findViewById(R.id.fab5_save)
         cameraFab = findViewById(R.id.fab6_camera)
+        foreDrawFab = findViewById(R.id.fab7_fore_draw)
 
         fabOpenAnim = AnimationUtils.loadAnimation(
             applicationContext,
@@ -119,71 +127,52 @@ class GalleryActivity : AppCompatActivity() {
             } finally {
                 cursor?.close()
             }
-
-
             //초기화
             imageView.alpha = 1f
-            imageView.visibility = View.VISIBLE
-            drawImageView.visibility = View.GONE
             imageView.setImageDrawable(null)
-            drawImageView.clear()
+            backDrawImageView.clear()
             //이미지뷰에 세팅
             imageUri = resultUri
             imageView.setImageURI(imageUri)
             // 캔버스와 크기 맞춰줌 및 초기화
-            drawImageView.layoutParams.width = imageView.width
-            drawImageView.layoutParams.height = imageView.height
-            Log.d("AAAA ", "" + imageView.width + "   " + imageView.height)
+            backDrawImageView.layoutParams.width = imageView.width
+            backDrawImageView.layoutParams.height = imageView.height
+            foreDrawImageView.layoutParams.width = imageView.width
+            foreDrawImageView.layoutParams.height = imageView.height
         }
-    }
-
-    private fun getStringFromBitmap(bitmapPicture: Bitmap): String? {
-        val encodedImage: String
-        val byteArrayBitmapStream = ByteArrayOutputStream()
-        bitmapPicture.compress(Bitmap.CompressFormat.PNG, 100, byteArrayBitmapStream)
-        val b: ByteArray = byteArrayBitmapStream.toByteArray()
-        encodedImage = Base64.encodeToString(b, Base64.DEFAULT)
-        return encodedImage
-    }
-
-    private fun openCropActivity(
-        sourceUri: Uri,
-        destinationUri: Uri
-    ) {
-        UCrop.of(sourceUri, destinationUri)
-            .start(this)
     }
 
     private fun anim() {
         if (isFabOpen) {
-            drawFab.startAnimation(fabCloseAnim)
+            backDrawFab.startAnimation(fabCloseAnim)
             undoFab.startAnimation(fabCloseAnim)
             clearFab.startAnimation(fabCloseAnim)
             saveFab.startAnimation(fabCloseAnim)
             cameraFab.startAnimation(fabCloseAnim)
-            drawFab.isClickable = false
+            foreDrawFab.startAnimation(fabCloseAnim)
+            backDrawFab.isClickable = false
             undoFab.isClickable = false
             clearFab.isClickable = false
             saveFab.isClickable = false
             cameraFab.isClickable = false
+            foreDrawFab.isClickable = false
             isFabOpen = false
         } else {
-            drawFab.startAnimation(fabOpenAnim)
+            backDrawFab.startAnimation(fabOpenAnim)
             undoFab.startAnimation(fabOpenAnim)
             clearFab.startAnimation(fabOpenAnim)
             saveFab.startAnimation(fabOpenAnim)
             cameraFab.startAnimation(fabOpenAnim)
-            drawFab.isClickable = true
+            foreDrawFab.startAnimation(fabOpenAnim)
+            backDrawFab.isClickable = true
             undoFab.isClickable = true
             clearFab.isClickable = true
             saveFab.isClickable = true
             cameraFab.isClickable = true
+            cameraFab.isClickable = true
+            foreDrawFab.isClickable = true
             isFabOpen = true
         }
-    }
-
-    companion object {
-        const val PICK_IMAGE = 1
     }
 
     // + 메뉴 Fab 버튼 열기
@@ -195,28 +184,55 @@ class GalleryActivity : AppCompatActivity() {
     fun undoDraw(view: View) {
         FancyToast.makeText(
             this,
-            "그리기 이전으로 지우기",
+            "그리기 되돌리기",
             FancyToast.LENGTH_LONG,
             FancyToast.INFO,
             true
         ).show()
-        drawImageView.undo()
+        backDrawImageView.undo()
     }
 
     // 마킹 그리기
-    fun drawLine(view: View) {
+    fun drawBackLine(view: View) {
         FancyToast.makeText(
             this,
-            "강조할 부분에 점을 찍어주세요",
+            "강조할 부분에 점을 찍어주세요 :)",
             FancyToast.LENGTH_LONG,
             FancyToast.INFO,
             true
         ).show()
+        foreDrawImageView.isClickable = false
+        foreDrawImageView.isEnabled = false
+        foreDrawImageView.isVisible = false
+        backDrawImageView.isClickable = true
+        backDrawImageView.isEnabled = true
+        backDrawImageView.isVisible = true
         imageView.alpha = 0.25f
-        drawImageView.visibility = View.VISIBLE
         // 캔버스와 크기 맞춰줌 및 초기화
-        drawImageView.layoutParams.width = imageView.width
-        drawImageView.layoutParams.height = imageView.height
+        backDrawImageView.layoutParams.width = imageView.width
+        backDrawImageView.layoutParams.height = imageView.height
+        anim()
+    }
+
+    // 마킹 그리기
+    fun drawForeLine(view: View) {
+        FancyToast.makeText(
+            this,
+            "강조하지 않을 부분에 점을 찍어주세요 :)",
+            FancyToast.LENGTH_LONG,
+            FancyToast.INFO,
+            true
+        ).show()
+        foreDrawImageView.isClickable = true
+        foreDrawImageView.isVisible = true
+        foreDrawImageView.isEnabled = true
+        backDrawImageView.isClickable = false
+        backDrawImageView.isVisible = false
+        backDrawImageView.isEnabled = false
+        imageView.alpha = 0.25f
+        // 캔버스와 크기 맞춰줌 및 초기화
+        foreDrawImageView.layoutParams.width = imageView.width
+        foreDrawImageView.layoutParams.height = imageView.height
         anim()
     }
 
@@ -229,30 +245,59 @@ class GalleryActivity : AppCompatActivity() {
             FancyToast.INFO,
             true
         ).show()
-        drawImageView.clear()
+        backDrawImageView.clear()
         anim()
     }
 
     // 세팅된 이미지 갤러리에 저장
     fun saveDrawFile(view: View) {
         val bitmap = imageView.drawable.toBitmap()
-        var outStream: FileOutputStream? = null
-        val sdCard: File = Environment.getExternalStorageDirectory()
-        val dir = File(sdCard.absolutePath + "/VisinApp")
-        dir.mkdirs()
-        val fileName =
-            String.format("%d.jpg", System.currentTimeMillis())
-        val outFile = File(dir, fileName)
-        outStream = FileOutputStream(outFile)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, outStream)
-        outStream.flush()
-        outStream.close()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val resolver = applicationContext.contentResolver
+            val pictureCollection =
+                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+
+            val pictureDetails = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, "VisionApp_" + System.currentTimeMillis())
+                put(MediaStore.Audio.Media.IS_PENDING, 1)
+            }
+            val pictureContentUri = resolver.insert(pictureCollection, pictureDetails)!!
+            resolver.openFileDescriptor(pictureContentUri, "w", null).use { pfd ->
+                try {
+                    pfd?.let {
+                        val fos = FileOutputStream(it.fileDescriptor)
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                        fos.close()
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+            pictureDetails.clear()
+            pictureDetails.put(MediaStore.Images.Media.IS_PENDING, 0)
+            resolver.update(pictureContentUri, pictureDetails, null, null)
+        } else {
+            MediaStore.Images.Media.insertImage(
+                contentResolver,
+                bitmap,
+                "VisionApp_" + System.currentTimeMillis(),
+                "VisionApp"
+            )
+        }
+        FancyToast.makeText(
+            this,
+            "이미지 저장",
+            FancyToast.LENGTH_LONG,
+            FancyToast.INFO,
+            true
+        ).show()
     }
 
     // 사진 서버에 전송
     fun requestDrawImage(view: View) {
-        Log.d("AAA", " AAAAA")
-        if (drawImageView.getPointList() == null || drawImageView.getPointList()!!.isEmpty()) {
+        if (backDrawImageView.getPointList() == null || backDrawImageView.getPointList()!!
+                .isEmpty()
+        ) {
             FancyToast.makeText(
                 this,
                 "선을 먼저 그려주세요",
@@ -262,14 +307,28 @@ class GalleryActivity : AppCompatActivity() {
             ).show()
             return
         }
-        val xList = ArrayList<Float>()
+        pb_loading.visibility = View.VISIBLE
+        val xList = ArrayList<Float>() //background point
         val yList = ArrayList<Float>()
-        while (drawImageView.getPointList()!!.isNotEmpty()) {
-            with(drawImageView.getPointList()) {
+        val nxList = ArrayList<Float>() //foreground
+        val nyList = ArrayList<Float>()
+        while (backDrawImageView.getPointList()!!.isNotEmpty()) {
+            with(backDrawImageView.getPointList()) {
                 val pointList = this?.pop()
                 for (point in pointList!!) {
                     xList.add(point.x)
                     yList.add(point.y)
+                }
+            }
+        }
+        foreDrawImageView.isVisible = true
+        backDrawImageView.isVisible = true
+        while (foreDrawImageView.getPointList()!!.isNotEmpty()) {
+            with(foreDrawImageView.getPointList()) {
+                val pointList = this?.pop()
+                for (point in pointList!!) {
+                    nxList.add(point.x)
+                    nyList.add(point.y)
                 }
             }
         }
@@ -278,32 +337,31 @@ class GalleryActivity : AppCompatActivity() {
         val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("image", file?.name, requestBody)
-        apiInteface.getTest(body, xList, yList).enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
-                drawImageView.clear()
-            }
+        apiInteface.getTest(body, xList, yList, nxList, nyList)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
+                    foreDrawImageView.isVisible = false
+                    backDrawImageView.isVisible = false
+                    backDrawImageView.clear()
+                    pb_loading.visibility = View.GONE
+                }
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.d("AAA", "REQUEST SUCCESS ==> ")
-                val file = response.body()?.byteStream()
-                val bitmap = BitmapFactory.decodeStream(file)
-                drawImageView.clear()
-            }
-        })
-//        apiInteface.getTest2(Point(xList, yList)).enqueue(object : Callback<ResponseBody> {
-//            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//                Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
-//                drawImageView.clear()
-//            }
-//
-//            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-//                Log.d("AAA", "SUCCESS REQUEST !!!!")
-//                drawImageView.clear()
-//            }
-//        })
-//
-//        })
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("AAA", "REQUEST SUCCESS ==> ")
+                    val file = response.body()?.byteStream()
+                    val bitmap = BitmapFactory.decodeStream(file)
+                    imageView.setImageURI(null)
+                    imageView.setImageBitmap(bitmap)
+                    foreDrawImageView.isVisible = false
+                    backDrawImageView.isVisible = false
+                    backDrawImageView.clear()
+                    pb_loading.visibility = View.GONE
+                }
+            })
     }
 
     // +Fab 메뉴 버튼(그리기관련) 나오게 하기
@@ -329,5 +387,9 @@ class GalleryActivity : AppCompatActivity() {
             "image/*"
         )
         startActivityForResult(intent, PICK_IMAGE)
+    }
+
+    companion object {
+        const val PICK_IMAGE = 1
     }
 }
