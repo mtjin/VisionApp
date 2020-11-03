@@ -1,12 +1,14 @@
 package com.mtjin.visionapp
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -33,6 +35,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 
 
@@ -249,17 +252,38 @@ class GalleryActivity : AppCompatActivity() {
     // 세팅된 이미지 갤러리에 저장
     fun saveDrawFile(view: View) {
         val bitmap = imageView.drawable.toBitmap()
-        var outStream: FileOutputStream? = null
-        val sdCard: File = Environment.getExternalStorageDirectory()
-        val dir = File(sdCard.absolutePath + "/VisinApp")
-        dir.mkdirs()
-        val fileName =
-            String.format("%d.jpg", System.currentTimeMillis())
-        val outFile = File(dir, fileName)
-        outStream = FileOutputStream(outFile)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outStream)
-        outStream.flush()
-        outStream.close()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val resolver = applicationContext.contentResolver
+            val pictureCollection =
+                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+
+            val pictureDetails = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, "VisionApp_" + System.currentTimeMillis())
+                put(MediaStore.Audio.Media.IS_PENDING, 1)
+            }
+            val pictureContentUri = resolver.insert(pictureCollection, pictureDetails)!!
+            resolver.openFileDescriptor(pictureContentUri, "w", null).use { pfd ->
+                try {
+                    pfd?.let {
+                        val fos = FileOutputStream(it.fileDescriptor)
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                        fos.close()
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+            pictureDetails.clear()
+            pictureDetails.put(MediaStore.Images.Media.IS_PENDING, 0)
+            resolver.update(pictureContentUri, pictureDetails, null, null)
+        } else {
+            MediaStore.Images.Media.insertImage(
+                contentResolver,
+                bitmap,
+                "VisionApp_" + System.currentTimeMillis(),
+                "VisionApp"
+            )
+        }
         FancyToast.makeText(
             this,
             "이미지 저장",

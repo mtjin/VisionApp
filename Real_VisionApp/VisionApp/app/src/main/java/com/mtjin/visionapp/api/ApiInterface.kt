@@ -18,15 +18,4 @@ interface ApiInterface {
         @Part("ny") ny: ArrayList<Float>
     ): Call<ResponseBody>
 
-//    @FormUrlEncoded
-//    @POST("/predict")
-//    fun getTest2(
-//        @Body point: Point
-//    ): Call<ResponseBody>
-//
-//    @FormUrlEncoded
-//    @POST("/predict")
-//    fun getTest3(
-//        @Field("TEST") test : String
-//    ): Call<ResponseBody>
 }
