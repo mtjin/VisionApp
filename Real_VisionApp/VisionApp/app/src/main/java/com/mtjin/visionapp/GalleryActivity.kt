@@ -343,7 +343,9 @@ class GalleryActivity : AppCompatActivity() {
                     Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
                     foreDrawImageView.isVisible = false
                     backDrawImageView.isVisible = false
+                    imageView.alpha = 1.0f
                     backDrawImageView.clear()
+                    foreDrawImageView.clear()
                     pb_loading.visibility = View.GONE
                 }
 
@@ -356,9 +358,11 @@ class GalleryActivity : AppCompatActivity() {
                     val bitmap = BitmapFactory.decodeStream(file)
                     imageView.setImageURI(null)
                     imageView.setImageBitmap(bitmap)
+                    imageView.alpha = 1.0f
                     foreDrawImageView.isVisible = false
                     backDrawImageView.isVisible = false
                     backDrawImageView.clear()
+                    foreDrawImageView.clear()
                     pb_loading.visibility = View.GONE
                 }
             })
