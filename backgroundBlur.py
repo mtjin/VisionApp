@@ -7,7 +7,7 @@ def target_remove(img, mask):
     print(img.shape)
     for i in range(len(img)):
         for j in range(len(img[0])):
-            if mask[i][j]> 220:
+            if mask[i][j]> 200:
                target_img[i, j, :] = 1
                remove_img[i,j,:] = 0
                mask[i][j] = 255
@@ -20,9 +20,10 @@ def target_remove(img, mask):
 def combination(background, target, mask):
     for i in range(len(mask)):
         for j in range(len(mask[0])):
-            if mask[i][j]> 220:
+            if mask[i][j]> 200:
                background[i,j,:] = target[i,j,:]
     return background
+
 
 def back_ground(remove_img, mask):
      
@@ -41,4 +42,5 @@ def back_ground(remove_img, mask):
                      remove_img[i,j,p] = np.mean(hist)
      back_img = remove_img
      return back_img
+
 

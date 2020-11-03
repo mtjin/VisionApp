@@ -1,59 +1,49 @@
 
 import os
-from tensorflow.keras.models import Model, load_model
+from keras.models import load_model
 from PIL import Image
 import cv2
 import numpy as np
 import blur_process_funcs
 import time
-name ='000000006954.jpg'
+
+
+import tensorflow as tf
+import keras
+print(tf.__version__)
+print(keras.__version__)
+
+
+name ='000000040036.jpg'
 maskname = 'mask.png'
 result=cv2.imread(name, cv2.IMREAD_COLOR)
 cv2.imwrite('result.png',result)
 img = cv2.imread('result.png', cv2.IMREAD_COLOR)
-temp = np.full((21, 21), 255)
+temp = np.full((65, 65), 255)
 foreground = []
 background = []
-model = load_model('COCO_2point_21kernel_v1.h5')
+model = load_model('point65_v2.h5')
+# model = load_model('unet_inp_skip_conn_ver_final.h5')
 def createPointLabel(pointlist, feature):
-    # a = len(img)
-    # b = len(img[0])
-    # patch = np.zeros((a, b))
-    # kernel1d = cv2.getGaussianKernel(65, 5)
-    # kernel2d = np.outer(kernel1d, kernel1d.transpose())
-    # gaussianPath = temp * kernel2d
-    # k = 255 / gaussianPath[32][32]
-    # gaussianPath = k * gaussianPath
-    # for i in range(len(pointlist)):
-    #     patchY = pointlist[i][1]
-    #     patchX = pointlist[i][0]
-    #     for j in range(patchY - 32, patchY + 33):
-    #         for k in range(patchX - 32, patchX + 33):
-    #             if (j < 0 or k < 0 or j > a - 1 or k > b - 1):
-    #                 continue
-    #             patch[j][k] = gaussianPath[j - (patchY - 32)][k - (patchX - 32)]
-    #     name = feature + '.png'
-    #     cv2.imwrite(name, patch)
     a = len(img)
     b = len(img[0])
     patch = np.zeros((a,b))
-    kernel1d = cv2.getGaussianKernel(21, 5)
+    kernel1d = cv2.getGaussianKernel(65, 7)
     kernel2d = np.outer(kernel1d, kernel1d.transpose())
     gaussianPath = temp * kernel2d
-    k = 255 / gaussianPath[10][10]
+    k = 255 / gaussianPath[32][32]
     gaussianPath = k * gaussianPath
     for i in range(len(pointlist)):
         patchY = pointlist[i][1]
         patchX = pointlist[i][0]
-        for j in range(patchY - 10, patchY + 11):
-            for k in range(patchX - 10, patchX + 11):
+        for j in range(patchY - 32, patchY + 33):
+            for k in range(patchX - 32, patchX + 33):
                 if (j < 0 or k < 0 or j > a - 1 or k > b - 1):
                     continue
-                patch[j][k] = max(patch[j][k],gaussianPath[j - (patchY - 10)][k - (patchX - 10)])
+                patch[j][k] = max(patch[j][k],gaussianPath[j - (patchY - 32)][k - (patchX - 32)])
         name = feature + '.png'
         cv2.imwrite(name,patch)
     return patch
-
 
 def modelinput():
     Input = np.zeros((1, 288, 480, 5))
@@ -132,8 +122,8 @@ while (1):
         # cv2.imshow('blur', blur)
 
         image.paste(mask, (0, 0), mask)
-        image.save('result.png')
-        dst = cv2.imread('result.png', cv2.IMREAD_COLOR)
+        image.save('result2.png')
+        dst = cv2.imread('result2.png', cv2.IMREAD_COLOR)
         cv2.imshow('dst', dst)
 
 
@@ -145,6 +135,4 @@ while (1):
         output = frame
 
 cv2.destroyAllWindows()
-
-
 

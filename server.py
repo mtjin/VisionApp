@@ -14,6 +14,7 @@ from PIL import Image
 from utils import *
 import keras
 
+
 # from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
