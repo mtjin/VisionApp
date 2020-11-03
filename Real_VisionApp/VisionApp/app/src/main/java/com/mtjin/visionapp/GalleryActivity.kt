@@ -10,7 +10,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -26,6 +25,7 @@ import com.mtjin.library.DrawView
 import com.mtjin.visionapp.api.ApiClient
 import com.mtjin.visionapp.api.ApiInterface
 import com.shashank.sony.fancytoastlib.FancyToast
+import kotlinx.android.synthetic.main.activity_gallery.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -307,6 +307,7 @@ class GalleryActivity : AppCompatActivity() {
             ).show()
             return
         }
+        pb_loading.visibility = View.VISIBLE
         val xList = ArrayList<Float>() //background point
         val yList = ArrayList<Float>()
         val nxList = ArrayList<Float>() //foreground
@@ -343,6 +344,7 @@ class GalleryActivity : AppCompatActivity() {
                     foreDrawImageView.isVisible = false
                     backDrawImageView.isVisible = false
                     backDrawImageView.clear()
+                    pb_loading.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -357,6 +359,7 @@ class GalleryActivity : AppCompatActivity() {
                     foreDrawImageView.isVisible = false
                     backDrawImageView.isVisible = false
                     backDrawImageView.clear()
+                    pb_loading.visibility = View.GONE
                 }
             })
     }
