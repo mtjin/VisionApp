@@ -12,13 +12,7 @@ from flask import send_file
 import io
 from PIL import Image
 from utils import *
-<<<<<<< HEAD
 from keras.models import load_model
-=======
-import keras
-
-
->>>>>>> 68a18635cf1331151661ac943e42838e2de7c27b
 # from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
@@ -56,8 +50,10 @@ def upload_file():
         f2 = flask.request.files.get('image')
         f2.save(file_dir)
         img = cv2.imread('D:\Git\VisionApp\ex1234.jpg')
-        
-    
+        ori_x = img.shape[0]
+        ori_y = img.shape[1]
+        rimg = cv2.resize(img,(288,480))
+        input_data[0,:,:,3] = rimg
        
         
         # 내가 찍은 X, Y 좌표 리스트 (Float 형)
@@ -67,7 +63,7 @@ def upload_file():
         
         
         PP =  get_User_Annotation_point_Mask(x_list,y_list,img)
-        
+        PP = cv2.resize(PP,(288,480))
         input_data[0,:,3] = PP
         """서버에서 positive_anno_mask을 upload_file에 대한 리스폰스값으로 보내야댐"""
         # positive_anno_mask = get_User_Annotation_point_Mask(x_list, y_list, img)
@@ -75,11 +71,13 @@ def upload_file():
         nx_list = np.uint(request.form.getlist('nx'))
         ny_list = np.uint(request.form.getlist('ny'))
         NP = get_User_Annotation_point_Mask(nx_list,ny_list,img)
+        NP = cv2.resize(NP,(288,480))
         input_data[0,:,4] = NP
         
         mask = model.predict(input_data)
         
-        out_focus_res = apply_blur(img,mask)
+        out_focus_res = apply_blur(rimg,mask)
+        out_focus_res = cv2.resize(out_focus_res,(ori_y,ori_x))
         cv2.imwrite('D:\Git\VisionApp\res_outfocus.jpg',out_focus_res)
         
         # 파일 받기
