@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.models import Model, load_model
 from backgroundBlur import *
 
+
 def discard():
     base_preict_path = './model_predicts'
     predicted_list = getPredict_List();
@@ -54,8 +55,6 @@ def createPointLabel(TPL, image):
 
 
 def get_User_Annotation_point_Mask(x_points,y_points,ori_img):
-    gauss_kernal = 65
-    gauss_gamma = 20
     y = len(ori_img)
     x = len(ori_img[0])
     patch = np.zeros((y,x))
@@ -98,8 +97,9 @@ def IoU(predicted_mask,mask_lable):
 
 def apply_blur(img,mask):
     target_img, remove_img, mask = target_remove(np.array(img), np.array(mask))
+    back_img = back_ground(remove_img, mask)
 
-    dst = cv2.inpaint(remove_img,mask,3,cv2.INPAINT_TELEA)
+    dst = cv2.inpaint(back_img,mask,3,cv2.INPAINT_TELEA)
     
     blur = cv2.GaussianBlur(dst, (5,5), 0)
     
