@@ -107,13 +107,12 @@ class GalleryActivity : AppCompatActivity() {
             //전송할 파일 등록
             var cursor: Cursor? = null
             try {
-                /*
-             *  Uri 스키마를
-             *  content:/// 에서 file:/// 로  변경한다.
-             */
                 val proj =
                     arrayOf(MediaStore.Images.Media.DATA)
                 cursor = contentResolver.query(resultUri, proj, null, null, null)
+                if (BuildConfig.DEBUG && cursor == null) {
+                    error("Assertion failed")
+                }
                 val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                 cursor.moveToFirst()
                 file = File(cursor.getString(column_index))
@@ -279,15 +278,32 @@ class GalleryActivity : AppCompatActivity() {
         val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("image", file?.name, requestBody)
-        apiInteface.getTest(body, xList, yList, xList, yList).enqueue(object : Callback<ResponseBody> {
+        apiInteface.getTest(body, xList, yList).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
                 drawImageView.clear()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.d("AAA", "REQUEST SUCCESS ==> ")
+                val file = response.body()?.byteStream()
+                val bitmap = BitmapFactory.decodeStream(file)
                 drawImageView.clear()
             }
         })
+//        apiInteface.getTest2(Point(xList, yList)).enqueue(object : Callback<ResponseBody> {
+//            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+//                Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
+//                drawImageView.clear()
+//            }
+//
+//            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+//                Log.d("AAA", "SUCCESS REQUEST !!!!")
+//                drawImageView.clear()
+//            }
+//        })
+//
+//        })
     }
 
     // +Fab 메뉴 버튼(그리기관련) 나오게 하기
