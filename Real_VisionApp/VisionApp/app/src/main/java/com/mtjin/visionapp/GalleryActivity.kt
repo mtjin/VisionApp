@@ -136,15 +136,6 @@ class GalleryActivity : AppCompatActivity() {
             backDrawImageView.layoutParams.height = imageView.height
             foreDrawImageView.layoutParams.width = imageView.width
             foreDrawImageView.layoutParams.height = imageView.height
-            Log.d("AAAAA", "" + imageView.layoutParams.width + " " + imageView.layoutParams.height)
-            Log.d(
-                "AAAAA",
-                "" + backDrawImageView.layoutParams.width + " " + backDrawImageView.layoutParams.height
-            )
-            Log.d(
-                "AAAAA",
-                "" + foreDrawImageView.layoutParams.width + " " + foreDrawImageView.layoutParams.height
-            )
         }
     }
 
@@ -200,15 +191,6 @@ class GalleryActivity : AppCompatActivity() {
 
     // 마킹 그리기
     fun drawBackLine(view: View) {
-        Log.d("AAAAA", "" + imageView.layoutParams.width + " " + imageView.layoutParams.height)
-        Log.d(
-            "AAAAA",
-            "" + backDrawImageView.layoutParams.width + " " + backDrawImageView.layoutParams.height
-        )
-        Log.d(
-            "AAAAA",
-            "" + foreDrawImageView.layoutParams.width + " " + foreDrawImageView.layoutParams.height
-        )
         FancyToast.makeText(
             this,
             "강조할 부분에 점을 찍어주세요 :)",

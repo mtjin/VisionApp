@@ -180,7 +180,7 @@
     </option>
   </component>
   <component name="RunManager">
-    <configuration name="VisionApp" type="Python.FlaskServer" factoryName="Flask server">
+    <configuration name="VisionApp" type="Python.FlaskServer">
       <module name="VisionApp" />
       <option name="target" value="$PROJECT_DIR$/server.py" />
       <option name="targetType" value="PATH" />
