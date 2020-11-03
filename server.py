@@ -12,8 +12,7 @@ from flask import send_file
 import io
 from PIL import Image
 from utils import *
-import keras
-
+from keras.models import load_model
 # from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
@@ -43,23 +42,40 @@ def upload_file():
         print(flask.request.files.get('image'))
         # print(flask.request.files['20200912_174631.jpg'])
         print(flask.request.form)
+        
+        
+        
         file_dir = "D:\Git\VisionApp\ex1234.jpg"
-
+        input_data = np.zeros((1,288,480,5))
         f2 = flask.request.files.get('image')
         f2.save(file_dir)
-        # img = cv2.imread('D:\Git\VisionApp\ex1234.jpg')
+        img = cv2.imread('D:\Git\VisionApp\ex1234.jpg')
+        
+    
+       
+        
         # 내가 찍은 X, Y 좌표 리스트 (Float 형)
-        #x_list = np.uint(request.form.getlist('x'))
-        #y_list = np.uint(request.form.getlist('y'))
+        x_list = np.uint(request.form.getlist('x'))
+        y_list = np.uint(request.form.getlist('y'))
         # 유저 백그라운드 포인트
-
+        
+        
+        PP =  get_User_Annotation_point_Mask(x_list,y_list,img)
+        
+        input_data[0,:,3] = PP
         """서버에서 positive_anno_mask을 upload_file에 대한 리스폰스값으로 보내야댐"""
         # positive_anno_mask = get_User_Annotation_point_Mask(x_list, y_list, img)
 
-        # nx_list = np.uint(request.form.getlist('nx'))
-        # ny_list = np.uint(request.form.getlist('ny'))
-        # negative_anno_mask = get_User_Annotation_point_Mask(x_list,y_list,img)
-
+        nx_list = np.uint(request.form.getlist('nx'))
+        ny_list = np.uint(request.form.getlist('ny'))
+        NP = get_User_Annotation_point_Mask(nx_list,ny_list,img)
+        input_data[0,:,4] = NP
+        
+        mask = model.predict(input_data)
+        
+        out_focus_res = apply_blur(img,mask)
+        cv2.imwrite('D:\Git\VisionApp\res_outfocus.jpg',out_focus_res)
+        
         # 파일 받기
         f = request.files['image']
 
@@ -68,7 +84,8 @@ def upload_file():
         print(f.filename)
         sfname = str(secure_filename(f.filename))
         f.save(sfname)
-    return send_file(file_dir, mimetype='image/jpg')
+        
+    return send_file('D:\Git\VisionApp\res_outfocus.jpg', mimetype='image/jpg')
     #return "성공"
 
 
@@ -76,6 +93,8 @@ def upload_file():
 if __name__ == "__main__":
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
+    
+    model = load_model('point65_v2.h5')
     # load_model()
     # 0.0.0.0 으로 해야 같은 와이파에 폰에서 접속 가능함
     app.run(host='0.0.0.0')
