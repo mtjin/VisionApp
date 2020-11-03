@@ -22,7 +22,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mtjin.library.DrawView
 import com.mtjin.visionapp.api.ApiClient
 import com.mtjin.visionapp.api.ApiInterface
-import com.mtjin.visionapp.model.Point
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
 import okhttp3.MediaType
@@ -115,7 +114,6 @@ class GalleryActivity : AppCompatActivity() {
                 val proj =
                     arrayOf(MediaStore.Images.Media.DATA)
                 cursor = contentResolver.query(resultUri, proj, null, null, null)
-                assert(cursor != null)
                 val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                 cursor.moveToFirst()
                 file = File(cursor.getString(column_index))
@@ -281,32 +279,15 @@ class GalleryActivity : AppCompatActivity() {
         val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file)
         val body: MultipartBody.Part =
             MultipartBody.Part.createFormData("image", file?.name, requestBody)
-        Log.d("AAA" , xList.toString())
-        Log.d("AAA" , yList.toString())
-        apiInteface.getTest(body,xList[0], yList[0]).enqueue(object : Callback<ResponseBody> {
+        apiInteface.getTest(body, xList, yList, xList, yList).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
                 drawImageView.clear()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.d("AAA", "SUCCESS REQUEST !!!!")
                 drawImageView.clear()
             }
         })
-//        apiInteface.getTest2(Point(xList, yList)).enqueue(object : Callback<ResponseBody> {
-//            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//                Log.d("AAA", "FAIL REQUEST ==> " + t.localizedMessage)
-//                drawImageView.clear()
-//            }
-//
-//            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-//                Log.d("AAA", "SUCCESS REQUEST !!!!")
-//                drawImageView.clear()
-//            }
-//        })
-//
-//        })
     }
 
     // +Fab 메뉴 버튼(그리기관련) 나오게 하기
