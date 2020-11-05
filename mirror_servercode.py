@@ -85,11 +85,13 @@ def upload_file():
         NP = get_User_Annotation_point_Mask(nx_list, ny_list, img)
         NP = cv2.resize(NP, (480, 288))
         cv2.imwrite('D:\Git\VisionApp\_NP.jpg', NP)
-        plt.imshow(NP)
-        plt.show()
+        # plt.imshow(NP)
+        # plt.show()
         input_data[0, :, :, 4] = NP
 
         mask = model.predict(input_data)[0, :, :, 0]
+        plt.imshow(mask)
+        plt.show()
         print(mask.shape)
         print(rimg.shape)
         mask = np.uint8(mask)

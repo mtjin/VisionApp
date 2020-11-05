@@ -19,12 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a5261a05-714a-45c5-9648-22b0766655dc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/VisionApp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VisionApp.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="a5261a05-714a-45c5-9648-22b0766655dc" name="Default Changelist" comment="[Revise] 이미지 처리 코드 에러나는 곳들 수정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mirror_servercode.py" beforeDir="false" afterPath="$PROJECT_DIR$/mirror_servercode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,8 +133,16 @@
       <workItem from="1604337710226" duration="572000" />
       <workItem from="1604421402026" duration="607000" />
       <workItem from="1604462874000" duration="4842000" />
-      <workItem from="1604570132780" duration="4662000" />
+      <workItem from="1604570132780" duration="5154000" />
     </task>
+    <task id="LOCAL-00001" summary="[Revise] 이미지 처리 코드 에러나는 곳들 수정">
+      <created>1604574869495</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1604574869495</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,6 +159,10 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[Revise] 이미지 처리 코드 에러나는 곳들 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Revise] 이미지 처리 코드 에러나는 곳들 수정" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="666" y="111" key="#mirror_servercode" timestamp="1604570407904">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -163,22 +172,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="111" key="#server/0.0.1920.1040@0.0.1920.1040" timestamp="1604462934113" />
-    <state width="1877" height="262" key="GridCell.Tab.0.bottom" timestamp="1604574767806">
+    <state width="1877" height="262" key="GridCell.Tab.0.bottom" timestamp="1604574919400">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="262" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1604574767806" />
-    <state width="1877" height="262" key="GridCell.Tab.0.center" timestamp="1604574767806">
+    <state width="1877" height="262" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1604574919400" />
+    <state width="1877" height="262" key="GridCell.Tab.0.center" timestamp="1604574919400">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="262" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1604574767806" />
-    <state width="1877" height="262" key="GridCell.Tab.0.left" timestamp="1604574767806">
+    <state width="1877" height="262" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1604574919400" />
+    <state width="1877" height="262" key="GridCell.Tab.0.left" timestamp="1604574919399">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="262" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1604574767806" />
-    <state width="1877" height="262" key="GridCell.Tab.0.right" timestamp="1604574767806">
+    <state width="1877" height="262" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1604574919399" />
+    <state width="1877" height="262" key="GridCell.Tab.0.right" timestamp="1604574919400">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="262" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1604574767806" />
+    <state width="1877" height="262" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1604574919400" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1604574874980">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1604574874980" />
     <state x="689" y="307" key="git4idea.merge.GitPullDialog" timestamp="1604570276795">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -186,6 +199,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/VisionApp$server.coverage" NAME="server Coverage Results" MODIFIED="1604466426092" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/VisionApp$mirror_servercode.coverage" NAME="mirror_servercode Coverage Results" MODIFIED="1604574767797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VisionApp$mirror_servercode.coverage" NAME="mirror_servercode Coverage Results" MODIFIED="1604574919393" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
