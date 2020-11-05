@@ -53,7 +53,7 @@ def upload_file():
         ori_x = img.shape[0]
         ori_y = img.shape[1]
         rimg = cv2.resize(img,(288,480))
-        input_data[0,:,:,3] = rimg
+        input_data[0,:,:,:3] = rimg
        
         
         # 내가 찍은 X, Y 좌표 리스트 (Float 형)
@@ -64,7 +64,7 @@ def upload_file():
         
         PP =  get_User_Annotation_point_Mask(x_list,y_list,img)
         PP = cv2.resize(PP,(288,480))
-        input_data[0,:,3] = PP
+        input_data[0,:,:,3] = PP
         """서버에서 positive_anno_mask을 upload_file에 대한 리스폰스값으로 보내야댐"""
         # positive_anno_mask = get_User_Annotation_point_Mask(x_list, y_list, img)
 
@@ -72,9 +72,9 @@ def upload_file():
         ny_list = np.uint(request.form.getlist('ny'))
         NP = get_User_Annotation_point_Mask(nx_list,ny_list,img)
         NP = cv2.resize(NP,(288,480))
-        input_data[0,:,4] = NP
+        input_data[0,:,:,4] = NP
         
-        mask = model.predict(input_data)
+        mask = model.predict(input_data)[0,:,:,0]
         
         out_focus_res = apply_blur(rimg,mask)
         out_focus_res = cv2.resize(out_focus_res,(ori_y,ori_x))
