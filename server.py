@@ -12,13 +12,9 @@ from flask import send_file
 import io
 from PIL import Image
 from utils import *
-<<<<<<< HEAD
 from keras.models import load_model
-=======
 import keras
 
-
->>>>>>> 68a18635cf1331151661ac943e42838e2de7c27b
 # from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import ImmutableMultiDict
@@ -61,24 +57,42 @@ def upload_file():
        
         
         # 내가 찍은 X, Y 좌표 리스트 (Float 형)
-        x_list = np.uint(request.form.getlist('x'))
-        y_list = np.uint(request.form.getlist('y'))
+        print(request.form.getlist('x'))
+        print(request.form.getlist('y'))
+        x_list = []
+        y_list = []
+        for value in request.form.getlist('x'):
+            x_list.append(int(float(value)))
+        for value in request.form.getlist('y'):
+            y_list.append(int(float(value)))
+        print(x_list)
+        # x_list = np.array(request.form.getlist('x'), dtype=int)
+        # y_list = np.array(request.form.getlist('y'), dtype=int)
+        # x_list = np.int(float(request.form.getlist('x')))
+        # y_list = np.int(float(request.form.getlist('y')))
+
         # 유저 백그라운드 포인트
-        
-        
         PP =  get_User_Annotation_point_Mask(x_list,y_list,img)
         
-        input_data[0,:,3] = PP
+        input_data[0, :, :, 3] = PP
         """서버에서 positive_anno_mask을 upload_file에 대한 리스폰스값으로 보내야댐"""
         # positive_anno_mask = get_User_Annotation_point_Mask(x_list, y_list, img)
 
-        nx_list = np.uint(request.form.getlist('nx'))
-        ny_list = np.uint(request.form.getlist('ny'))
+        nx_list = []
+        ny_list = []
+        for value in request.form.getlist('nx'):
+            nx_list.append(int(float(value)))
+        for value in request.form.getlist('ny'):
+            ny_list.append(int(float(value)))
+        # nx_list = np.array(request.form.getlist('nx'), dtype=int)
+        # ny_list = np.array(request.form.getlist('ny'), dtype=int)
+        # nx_list = np.int(float(request.form.getlist('nx')))
+        # ny_list = np.int(float(request.form.getlist('ny')))
         NP = get_User_Annotation_point_Mask(nx_list,ny_list,img)
-        input_data[0,:,4] = NP
-        
+        input_data[0, :, :, 3] = NP
+
         mask = model.predict(input_data)
-        
+
         out_focus_res = apply_blur(img,mask)
         cv2.imwrite('D:\Git\VisionApp\res_outfocus.jpg',out_focus_res)
         
