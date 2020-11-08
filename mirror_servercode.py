@@ -94,6 +94,7 @@ def upload_file():
         plt.show()
         print(mask.shape)
         print(rimg.shape)
+        mask = mask * 255
         mask = np.uint8(mask)
         out_focus_res = apply_blur(rimg, mask)
         out_focus_res = cv2.resize(out_focus_res, (ori_y, ori_x))
