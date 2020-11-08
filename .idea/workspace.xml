@@ -19,10 +19,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a5261a05-714a-45c5-9648-22b0766655dc" name="Default Changelist" comment="[Revise] 이미지 처리 코드 에러나는 곳들 수정">
+    <list default="true" id="a5261a05-714a-45c5-9648-22b0766655dc" name="Default Changelist" comment="[Revise] mask * 255 설정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Real_VisionApp/VisionApp/app/src/main/java/com/mtjin/visionapp/api/ApiClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Real_VisionApp/VisionApp/app/src/main/java/com/mtjin/visionapp/api/ApiClient.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mirror_servercode.py" beforeDir="false" afterPath="$PROJECT_DIR$/mirror_servercode.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +133,7 @@
       <workItem from="1604421402026" duration="607000" />
       <workItem from="1604462874000" duration="4842000" />
       <workItem from="1604570132780" duration="5174000" />
-      <workItem from="1604825522471" duration="717000" />
+      <workItem from="1604825522471" duration="1666000" />
     </task>
     <task id="LOCAL-00001" summary="[Revise] 이미지 처리 코드 에러나는 곳들 수정">
       <created>1604574869495</created>
@@ -151,7 +149,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604575322821</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="[Revise] mask * 255 설정">
+      <created>1604826465921</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1604826465921</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -171,7 +176,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[Revise] 이미지 처리 코드 에러나는 곳들 수정" />
-    <option name="LAST_COMMIT_MESSAGE" value="[Revise] 이미지 처리 코드 에러나는 곳들 수정" />
+    <MESSAGE value="[Revise] mask * 255 설정" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Revise] mask * 255 설정" />
   </component>
   <component name="WindowStateProjectService">
     <state x="666" y="111" key="#mirror_servercode" timestamp="1604570407904">
@@ -198,10 +204,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="262" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1604825851733" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1604575326851">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1604826471500">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1604575326851" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1604826471500" />
     <state x="689" y="307" key="git4idea.merge.GitPullDialog" timestamp="1604570276795">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
