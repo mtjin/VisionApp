@@ -1,0 +1,238 @@
+idx,cat,iou,iou>0.5
+0,horse,0.42042756,False
+1,horse,0.0,False
+2,horse,0.21794872,False
+3,traffic light,0.66078323,True
+4,traffic light,0.3508772,False
+5,traffic light,0.5135135,True
+6,tv,0.65888023,True
+7,tv,0.7758064,True
+8,tv,0.9067844,True
+9,motorcycle,0.72410715,True
+10,motorcycle,0.78545004,True
+11,motorcycle,0.34856316,False
+12,spoon,0.26027396,False
+13,spoon,0.79449624,True
+14,spoon,0.31506848,False
+15,bowl,0.63052464,True
+16,bowl,0.80136985,True
+17,bowl,0.56032914,True
+18,cow,0.2769231,False
+19,cow,0.06666667,False
+20,cow,0.1,False
+21,sheep,0.76722264,True
+22,sheep,0.5066225,True
+23,sheep,0.46522412,False
+24,bird,0.060606062,False
+25,bird,0.0,False
+26,bird,0.0,False
+27,umbrella,0.48872182,False
+28,umbrella,0.5577085,True
+29,umbrella,0.52863437,True
+30,tie,0.55776894,True
+31,tie,0.54944474,True
+32,tie,0.7559055,True
+33,parking meter,0.0,False
+34,parking meter,0.68028843,True
+35,parking meter,0.6855652,True
+36,airplane,0.22522523,False
+37,airplane,0.724113,True
+38,airplane,0.4418373,False
+39,cake,0.26024786,False
+40,cake,0.87531376,True
+41,cake,0.87885904,True
+42,surfboard,0.6659334,True
+43,surfboard,0.7369226,True
+44,surfboard,0.5023847,True
+45,boat,0.5356921,True
+46,boat,0.8151815,True
+47,boat,0.29661018,False
+48,laptop,0.43590498,False
+49,laptop,0.9498768,True
+50,laptop,0.6154996,True
+51,dog,0.8937838,True
+52,dog,0.91811603,True
+53,dog,0.6125623,True
+54,chair,0.42352942,False
+55,chair,0.34343433,False
+56,chair,0.7814815,True
+57,bottle,0.5241379,True
+58,bottle,0.5908019,True
+59,bottle,0.25997248,False
+60,bus,0.8873935,True
+61,bus,0.68214947,True
+62,bus,0.75447357,True
+63,car,0.5323741,True
+64,car,0.65065503,True
+65,car,0.788932,True
+66,person,0.78751916,True
+67,person,0.52022254,True
+68,person,0.28202215,False
+69,mouse,0.6105263,True
+70,mouse,0.54931295,True
+71,mouse,0.63093144,True
+72,donut,0.7063762,True
+73,donut,0.7533207,True
+74,donut,0.79635257,True
+75,banana,0.81243,True
+76,banana,0.44907975,False
+77,banana,0.45,False
+78,vase,0.20833333,False
+79,vase,0.14285715,False
+80,vase,0.7703928,True
+81,carrot,0.5483444,True
+82,carrot,0.48736638,False
+83,carrot,0.7753263,True
+84,bench,0.34333333,False
+85,bench,0.5801972,True
+86,bench,0.59133124,True
+87,skateboard,0.62926275,True
+88,skateboard,0.59352577,True
+89,skateboard,0.26824817,False
+90,microwave,0.587963,True
+91,microwave,0.30272728,False
+92,microwave,0.79184246,True
+93,hot dog,0.34265736,False
+94,hot dog,0.81699765,True
+95,hot dog,0.5745614,True
+96,cat,0.3452586,False
+97,cat,0.80836767,True
+98,cat,0.78885186,True
+99,clock,0.1316752,False
+100,clock,0.3483332,False
+101,clock,0.56968576,True
+102,potted plant,0.6365973,True
+103,potted plant,0.78431064,True
+104,potted plant,0.66148245,True
+105,cell phone,0.44761905,False
+106,cell phone,0.2421875,False
+107,cell phone,0.6701903,True
+108,couch,0.67274463,True
+109,couch,0.9230688,True
+110,couch,0.76602566,True
+111,oven,0.87688535,True
+112,oven,0.31578946,False
+113,oven,0.8189081,True
+114,fork,0.44549763,False
+115,fork,0.33696324,False
+116,fork,0.24074075,False
+117,giraffe,0.592991,True
+118,giraffe,0.66358775,True
+119,giraffe,0.41916168,False
+120,book,0.83491933,True
+121,book,0.14839517,False
+122,book,0.12745099,False
+123,stop sign,0.32692307,False
+124,stop sign,0.3611111,False
+125,stop sign,0.86591697,True
+126,toothbrush,0.6376496,True
+127,toothbrush,0.2345679,False
+128,toothbrush,0.7006222,True
+129,baseball glove,0.54511744,True
+130,baseball glove,0.41935483,False
+131,baseball glove,0.61187214,True
+132,baseball bat,0.54727614,True
+133,baseball bat,0.43786982,False
+134,baseball bat,0.47507954,False
+135,handbag,0.3962264,False
+136,handbag,0.56674474,True
+137,handbag,0.5126051,True
+138,skis,0.053254437,False
+139,skis,0.46261683,False
+140,skis,0.539726,True
+141,cup,0.31422722,False
+142,cup,0.6979866,True
+143,cup,0.66867924,True
+144,broccoli,0.35702917,False
+145,broccoli,0.78741866,True
+146,broccoli,0.7001868,True
+147,remote,0.8201001,True
+148,remote,0.5574713,True
+149,remote,0.8030303,True
+150,frisbee,0.8577778,True
+151,frisbee,0.73289365,True
+152,frisbee,0.6086956,True
+153,wine glass,0.4338028,False
+154,wine glass,0.32911393,False
+155,wine glass,0.49536178,False
+156,suitcase,0.51891893,True
+157,suitcase,0.8155509,True
+158,suitcase,0.8470417,True
+159,keyboard,0.70501214,True
+160,keyboard,0.42766714,False
+161,keyboard,0.59561753,True
+162,backpack,0.8395307,True
+163,backpack,0.3364486,False
+164,backpack,0.2857143,False
+165,toaster,0.6608247,True
+166,toaster,0.6924987,True
+167,toaster,0.6560232,True
+168,refrigerator,0.6323085,True
+169,refrigerator,0.8992289,True
+170,refrigerator,0.1390046,False
+171,train,0.42292535,False
+172,train,0.34898564,False
+173,train,0.27308095,False
+174,bear,0.9558847,True
+175,bear,0.8859959,True
+176,bear,0.374692,False
+177,toilet,0.27403063,False
+178,toilet,0.8713857,True
+179,toilet,0.94265574,True
+180,sports ball,0.42424244,False
+181,sports ball,0.6928105,True
+182,sports ball,0.594697,True
+183,teddy bear,0.81889796,True
+184,teddy bear,0.35466215,False
+185,teddy bear,0.9267898,True
+186,sink,0.74968946,True
+187,sink,0.6045136,True
+188,sink,0.3245033,False
+189,fire hydrant,0.6761269,True
+190,fire hydrant,0.9378353,True
+191,fire hydrant,0.6388483,True
+192,truck,0.41494113,False
+193,truck,0.3960511,False
+194,truck,0.7482305,True
+195,orange,0.48863637,False
+196,orange,0.792278,True
+197,orange,0.51798224,True
+198,snowboard,0.40764332,False
+199,snowboard,0.120192304,False
+200,snowboard,0.6537911,True
+201,scissors,0.54988736,True
+202,scissors,0.69913095,True
+203,scissors,0.688627,True
+204,kite,0.14838709,False
+205,kite,0.6749611,True
+206,kite,0.48670757,False
+207,bicycle,0.4779412,False
+208,bicycle,0.7258891,True
+209,bicycle,0.32152975,False
+210,dining table,0.624,True
+211,dining table,0.3116883,False
+212,dining table,0.55244756,True
+213,knife,0.0,False
+214,knife,0.70341045,True
+215,knife,0.0,False
+216,hair drier,0.80356103,True
+217,hair drier,0.8677859,True
+218,hair drier,0.7228586,True
+219,pizza,0.51373,True
+220,pizza,0.25880378,False
+221,pizza,0.4219867,False
+222,bed,0.77481526,True
+223,bed,0.7238225,True
+224,bed,0.86587507,True
+225,apple,0.4937833,False
+226,apple,0.8546255,True
+227,apple,0.49074537,False
+228,tennis racket,0.73249817,True
+229,tennis racket,0.68016195,True
+230,tennis racket,0.55684006,True
+231,zebra,0.25874126,False
+232,zebra,0.20048505,False
+233,zebra,0.6666667,True
+234,sandwich,0.7077338,True
+235,sandwich,0.93255407,True
+236,sandwich,0.42925563,False
