@@ -1,15 +1,10 @@
-import os
-from PIL import Image
-import numpy as np
+
 import cv2
 
-from tensorflow.keras.models import Model, load_model
 from backgroundBlur import *
     
 temp = np.full(( 65 , 65 ), 255 )
-def load_Model(path):
-    model = load_model(path)
-    return model
+
 
 def targetPixelList(image):
     x = len(image[0])
