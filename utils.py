@@ -2,19 +2,11 @@ import os
 from PIL import Image
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
+
 from tensorflow.keras.models import Model, load_model
 from backgroundBlur import *
-
-
-def discard():
-    base_preict_path = './model_predicts'
-    predicted_list = getPredict_List();
-    for one in predicted_list:
-        tmp_path = os.path.join(base_preict_path,one)
-        os.remove(tmp_path)
     
-
+temp = np.full(( 65 , 65 ), 255 )
 def load_Model(path):
     model = load_model(path)
     return model
@@ -30,49 +22,23 @@ def targetPixelList(image):
     return pointlist
 
 
-def createPointLabel(TPL, image):
-    y = len(image)
-    x = len(image[0])
-    patch = np.zeros((y,x))
-    # pointpatch = pointPatch
-    temp = np.full(( 65 , 65 ), 255 )
-    if(len(TPL)>0):
-        index = randint(0,len(TPL)-1)
-        kernel1d = cv2.getGaussianKernel(65, 20)
-        kernel2d = np.outer(kernel1d, kernel1d.transpose())
-
-        gaussianPath = temp * kernel2d
-        k = 255 / gaussianPath[32][32]
-        gaussianPath = k*gaussianPath
-        patchY = TPL[index][0]
-        patchX = TPL[index][1]
-        for j in range(patchY-32, patchY+33):
-            for k in range(patchX-32, patchX+33):
-                if(j<0 or k<0 or j > y-1 or k>x-1):
+def get_User_Annotation_point(x_list, y_list,img):
+    a = len(img)
+    b = len(img[0])
+    patch = np.zeros((a, b))
+    kernel1d = cv2.getGaussianKernel(65, 7)
+    kernel2d = np.outer(kernel1d, kernel1d.transpose())
+    gaussianPath = temp * kernel2d
+    k = 255 / gaussianPath[32][32]
+    gaussianPath = k * gaussianPath
+    for i in range(len(x_list)):
+        patchY = y_list[i]
+        patchX = x_list[i]
+        for j in range(patchY - 32, patchY + 33):
+            for k in range(patchX - 32, patchX + 33):
+                if (j < 0 or k < 0 or j > a - 1 or k > b - 1):
                     continue
-                patch[j][k] = gaussianPath[j-(patchY-32)][k-(patchX-32)]
-    return patch
-
-
-def get_User_Annotation_point_Mask(x_points,y_points,ori_img):
-    y = len(ori_img)
-    x = len(ori_img[0])
-    patch = np.zeros((y,x))
-    temp = np.full(( 65 , 65 ), 255 )
-    for i,x_ in enumerate(x_points):
-        kernel1d = cv2.getGaussianKernel(65, 20)
-        kernel2d = np.outer(kernel1d, kernel1d.transpose())
-
-        gaussianPath = temp * kernel2d
-        k = 255 / gaussianPath[32][32]
-        gaussianPath = k*gaussianPath
-        patchY = y_points[i]
-        patchX = x_
-        for j in range(patchY-32, patchY+33):
-            for k in range(patchX-32, patchX+33):
-                if(j<0 or k<0 or j > y-1 or k>x-1):
-                    continue
-                patch[j][k] = gaussianPath[j-(patchY-32)][k-(patchX-32)]
+                patch[j][k] = max(patch[j][k], gaussianPath[j - (patchY - 32)][k - (patchX - 32)])
     return patch
     
 
