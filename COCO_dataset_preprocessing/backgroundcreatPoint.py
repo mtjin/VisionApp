@@ -6,48 +6,6 @@ import numpy as np
 import os
 import glob
 import cv2
-import pandas as pd
-import PIL.Image as pilimg
-from PIL import Image
-import matplotlib.image as mpimg
-
-def rgb2gray(rgb):
-
-    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
-    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
-
-    return gray
-def pointPatch():
-    ##Just calculate 64*64
-    arr = np.zeros((64,64,3), dtype=np.uint8)
-    imgsize = arr.shape[:2]
-    innerColor = (255, 255, 255)
-    outerColor = (0, 0, 0)
-    for y in range(imgsize[1]):
-        for x in range(imgsize[0]):
-            #Find the distance to the corner
-            distanceToCenter = np.sqrt((x) ** 2 + (y - imgsize[1]) ** 2)
-
-            #Make it on a scale from 0 to 1innerColor
-            distanceToCenter = distanceToCenter / (np.sqrt(2) * imgsize[0])
-
-            #Calculate r, g, and b values
-            r = outerColor[0] * distanceToCenter + innerColor[0] * (1 - distanceToCenter)
-            g = outerColor[1] * distanceToCenter + innerColor[1] * (1 - distanceToCenter)
-            b = outerColor[2] * distanceToCenter + innerColor[2] * (1 - distanceToCenter)
-            # print r, g, b
-            arr[y, x] = (int(r), int(g), int(b))
-    #rotate and combine
-    arr1=arr
-    arr2=arr[::-1,:,:]
-    arr3=arr[::-1,::-1,:]
-    arr4=arr[::,::-1,:]
-    arr5=np.vstack([arr1,arr2])
-    arr6=np.vstack([arr4,arr3])
-    arr7=np.hstack([arr6,arr5])
-    arr7 = rgb2gray(arr7)
-    return arr7
-
 
 def targetPixelList(image):
     x = len(image[0])
@@ -64,42 +22,50 @@ def createPointLabel(TPL, image):
     y = len(image)
     x = len(image[0])
     patch = np.zeros((y,x))
-    pointpatch = pointPatch()
+    # pointpatch = pointPatch
+    temp = np.full(( 21 , 21 ), 255 )
     if(len(TPL)>0):
         index = randint(0,len(TPL)-1)
-        # kernel1d = cv2.getGaussianKernel(101, 2.5)
-        # kernel2d = np.outer(kernel1d, kernel1d.transpose())
-        # gaussianPath = kernel2d * temp
+        kernel1d = cv2.getGaussianKernel(21, 5)
+        kernel2d = np.outer(kernel1d, kernel1d.transpose())
+
+        gaussianPath = temp * kernel2d
+        k = 255 / gaussianPath[10][10]
+        gaussianPath = k*gaussianPath
         patchY = TPL[index][0]
         patchX = TPL[index][1]
-        for j in range(patchY-64, patchY+64):
-            for k in range(patchX-64, patchX+64):
+        for j in range(patchY-10, patchY+11):
+            for k in range(patchX-10, patchX+11):
                 if(j<0 or k<0 or j > y-1 or k>x-1):
                     continue
-                patch[j][k] = pointpatch[j-(patchY-64)][k-(patchX-64)]
+                patch[j][k] = gaussianPath[j-(patchY-10)][k-(patchX-10)]
     return patch
+
 
 if __name__ == "__main__":
     os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_ 0"] = "4"
+    maskdirNames = '/home/su_j615/out_focusing/trainmasks'
+    # maskdirNames = '/home/su_j615/out_focusing/valmasks'
+    dirName = glob.glob(maskdirNames + "/*")
+    k=0
+    for j in range(len(dirName)):
+        fileNames = glob.glob(dirName[j] + "/*")
+        print(len(fileNames))
+        for i in range(len(fileNames)):
+            # print(str(i))
+            image = cv2.imread(fileNames[i], cv2.IMREAD_GRAYSCALE)
+            print(fileNames[i])
+            TPL = targetPixelList(image)
+            patch = createPointLabel(TPL, image)
+            dirpath = dirName[j].replace('trainmasks', 'trainbackpoints') + '/point' + str(k)
+            # dirpath = dirName[j].replace('valmasks', 'valbackpoints') + '/point' + str(k)
+            print(dirpath)
+            if not (os.path.isdir(dirpath)):
+                os.makedirs(os.path.join(dirpath))
+            path = fileNames[i][fileNames[i].rfind('/') + 1:]
+            path = dirpath + '/' + path
+            print(path)
+            cv2.imwrite(path, patch)
 
-    dirNames = '/tmp/pycharm_project_368/masks7'
-    # #print(dirNames)
-    # #for i in range():
-    # if not (os.path.isdir('/tmp/pycharm_project_368/DAVIS/Annotations/Point')):
-    #     os.makedirs(os.path.join('/tmp/pycharm_project_368/DAVIS/Annotations/Point'))
-    # for i in range(len(dirNames)):
-    fileNames = glob.glob(dirNames + "/*")
-    print(len(fileNames))
-    for i in range(len(fileNames)):
-        print(str(i)+"번째")
-        src = cv2.imread(fileNames[i], cv2.IMREAD_COLOR)
-        image = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
-        TPL = targetPixelList(image)
-        patch = createPointLabel(TPL, image)
-        dirpath = dirNames.replace('/masks7', '/backgrounds71')
-        if not (os.path.isdir(dirpath)):
-            os.makedirs(os.path.join(dirpath))
-        path = fileNames[i].replace('/masks7', '/backgrounds71')
-        cv2.imwrite(path, patch)
 
