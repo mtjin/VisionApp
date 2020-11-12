@@ -1,11 +1,13 @@
 # UnetPointAnnotationSegmentation
+
 ## UserInteraction
 ![Interaction](./img/interaction.gif)
+
 ## Model
 ![Model](./img/model.png)
 ## MaskingTask
 ![MaskingTask](./img/maskingTask.JPG)
-## refine mask (Threshold: RGB 220)
+## refine mask (Threshold: RGB 200)
 ![mask](./img/mask.png)
 ## removeTarget(Background)
 ![removeTarget](./img/remove.png)
