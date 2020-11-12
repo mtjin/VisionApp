@@ -1,7 +1,6 @@
 # UnetPointAnnotationSegmentation
-
-<iframe width="640" height="360" src="https://www.youtube.com/watch?v=WfZvZVPgBwU" frameborder="0" gesture="media" allowfullscreen=""></iframe>
-
+## UserInteraction
+![Interaction](./img/interaction.gif)
 ## Model
 ![Model](./img/model.png)
 ## MaskingTask
